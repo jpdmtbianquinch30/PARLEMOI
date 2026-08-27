@@ -1,7 +1,7 @@
 @if (serviceActif(); as s) {
   <section class="service-detail">
     <a routerLink="/services" class="service-detail__back">← Tous les services</a>
-    <img src="service.png" alt="" class="service-detail__image" />
+    <img [src]="s.image" alt="" class="service-detail__image" />
     <h1>{{ s.nom }}</h1>
     <p class="service-detail__description">{{ s.description }}</p>
     <p class="service-detail__text">{{ s.detail }}</p>
@@ -9,18 +9,20 @@
   </section>
 } @else {
   <section class="services">
-    
-  <h1 class="services__title">De quoi as-tu besoin ?</h1>
+    <h1 class="services__title">De quoi as-tu besoin ?</h1>
     <p class="services__subtitle">Choisis le type d'échange qui correspond le mieux à ce que tu ressens aujourd'hui.</p>
 
     <div class="services__grid">
       @for (s of services(); track s.slug) {
         <div class="service-card">
-          <h3>{{ s.nom }}</h3>
-          <p>{{ s.description }}</p>
-          <div class="service-card__actions">
-            <a [routerLink]="['/services', s.slug]" class="service-card__link">En savoir plus</a>
-            <a routerLink="/reservation" class="btn btn--primary btn--small">Réserver</a>
+          <img [src]="s.image" alt="" class="service-card__image" />
+          <div class="service-card__body">
+            <h3>{{ s.nom }}</h3>
+            <p>{{ s.description }}</p>
+            <div class="service-card__actions">
+              <a [routerLink]="['/services', s.slug]" class="service-card__link">En savoir plus</a>
+              <a routerLink="/reservation" class="btn btn--primary btn--small">Réserver</a>
+            </div>
           </div>
         </div>
       }

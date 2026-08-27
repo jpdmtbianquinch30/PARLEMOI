@@ -122,8 +122,9 @@
   position: relative;
   min-height: 550px;
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   padding: 4rem var(--space-md);
   margin: 3rem 0 0 0;
   
@@ -229,6 +230,7 @@
   padding: 5rem var(--space-md);
   text-align: center;
   position: relative;
+  overflow: hidden; 
 
   &::before {
     content: '';
@@ -256,9 +258,10 @@
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 2rem;
     max-width: 1000px;
-    margin: 0 auto 3rem;
+    margin: var(--space-xl) auto 3rem;   // ⬅️ était "0 auto 3rem" — ajoute de l'air sous le titre
     position: relative;
     z-index: 1;
+    padding-top: var(--space-md);        // ⬅️ laisse la place au badge qui dépasse en haut
   }
 
   &__link {
@@ -511,5 +514,28 @@
   .formule-mini,
   blockquote {
     padding: 1.5rem 1rem;
+  }
+}
+.chiffres {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2xl);
+  flex-wrap: wrap;
+  padding: var(--space-xl) var(--space-md);
+  text-align: center;
+
+  &__item {
+    strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      color: var(--color-corail);
+    }
+    span {
+      color: var(--color-encre-muted);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
   }
 }

@@ -87,7 +87,7 @@
     }
   }
 
-  &__submenu {
+    &__submenu {
     position: static;
     background: var(--color-voile);
     border-radius: var(--radius-sm);
@@ -114,6 +114,14 @@
       &:hover {
         background: rgba(35, 35, 56, 0.04);
       }
+    }
+
+    &-all {
+      font-weight: 700 !important;
+      color: var(--color-corail) !important;
+      border-bottom: 1px solid rgba(35, 35, 56, 0.08);
+      margin-bottom: var(--space-xs);
+      padding-bottom: var(--space-xs) !important;
     }
   }
 

@@ -14,14 +14,15 @@
       <span class="header__arrow" [class.header__arrow--open]="servicesOuvert()">▾</span>
     </button>
     @if (servicesOuvert()) {
-      <div class="header__submenu">
-        <a routerLink="/services/ecoute-discussion" (click)="fermerMenu()">Écoute & discussion</a>
-        <a routerLink="/services/soutien-rupture" (click)="fermerMenu()">Soutien après une rupture</a>
-        <a routerLink="/services/difficultes-relationnelles" (click)="fermerMenu()">Difficultés relationnelles</a>
-        <a routerLink="/services/motivation" (click)="fermerMenu()">Motivation & encouragement</a>
-        <a routerLink="/services/conversation-libre" (click)="fermerMenu()">Conversation libre</a>
-      </div>
-    }
+  <div class="header__submenu">
+    <a routerLink="/services" (click)="fermerMenu()" class="header__submenu-all">Tous les services →</a>
+    <a routerLink="/services/ecoute-discussion" (click)="fermerMenu()">Écoute & discussion</a>
+    <a routerLink="/services/soutien-rupture" (click)="fermerMenu()">Soutien après une rupture</a>
+    <a routerLink="/services/difficultes-relationnelles" (click)="fermerMenu()">Difficultés relationnelles</a>
+    <a routerLink="/services/motivation" (click)="fermerMenu()">Motivation & encouragement</a>
+    <a routerLink="/services/conversation-libre" (click)="fermerMenu()">Conversation libre</a>
+  </div>
+}
   </div>
 
   <div class="header__dropdown">
@@ -31,6 +32,7 @@
     </button>
     @if (formulesOuvert()) {
       <div class="header__submenu">
+        <a routerLink="/formules" (click)="fermerMenu()" class="header__submenu-all">Toutes les formules →</a>
         <a routerLink="/formules/decouverte" (click)="fermerMenu()">Découverte</a>
         <a routerLink="/formules/confort" (click)="fermerMenu()">Confort</a>
         <a routerLink="/formules/premium" (click)="fermerMenu()">Premium</a>
