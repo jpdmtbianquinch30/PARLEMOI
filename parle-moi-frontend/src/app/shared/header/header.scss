@@ -1,0 +1,105 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-lg);
+  background: rgba(250, 246, 243, 0.9);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(35, 35, 56, 0.08);
+
+  &__logo {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-encre);
+  }
+
+  &__nav {
+    display: none;
+    gap: var(--space-md);
+    align-items: center;
+
+    @media (min-width: 768px) {
+      display: flex;
+    }
+  }
+
+  &__dropdown {
+    position: relative;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      font-size: 0.95rem;
+      color: var(--color-encre);
+    }
+  }
+
+  &__arrow {
+    display: inline-block;
+    transition: transform 0.2s ease;
+
+    &--open {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__submenu {
+    position: absolute;
+    top: calc(100% + var(--space-xs));
+    left: 0;
+    background: white;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 8px 24px rgba(26, 27, 46, 0.12);
+    padding: var(--space-xs);
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+
+    a {
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+
+      &:hover {
+        background: var(--color-voile);
+      }
+    }
+  }
+
+  &__cta {
+    background: var(--color-corail);
+    color: white;
+    padding: var(--space-xs) var(--space-md);
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: var(--color-corail-hover);
+    }
+  }
+
+  &__burger {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+
+    @media (min-width: 768px) {
+      display: none;
+    }
+
+    span {
+      width: 22px;
+      height: 2px;
+      background: var(--color-encre);
+    }
+  }
+}

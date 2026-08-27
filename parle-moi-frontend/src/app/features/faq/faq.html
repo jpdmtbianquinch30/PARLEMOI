@@ -1,0 +1,17 @@
+<section class="faq">
+  <h1>Questions fréquentes</h1>
+
+  <div class="faq__list">
+    @for (item of items(); track item.question; let i = $index) {
+      <div class="faq__item">
+        <button class="faq__question" (click)="toggle(i)">
+          {{ item.question }}
+          <span class="faq__arrow" [class.faq__arrow--open]="ouvert() === i">▾</span>
+        </button>
+        @if (ouvert() === i) {
+          <p class="faq__reponse">{{ item.reponse }}</p>
+        }
+      </div>
+    }
+  </div>
+</section>

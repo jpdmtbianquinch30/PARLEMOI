@@ -1,0 +1,67 @@
+<section class="suivre">
+  <h1 class="suivre__title">Suivre ma demande</h1>
+  <p class="suivre__subtitle">Entre ton code de réservation pour consulter son statut.</p>
+
+  <div class="suivre__card">
+    <div class="suivre__field">
+      <label for="code">Code de réservation</label>
+      <input
+        id="code"
+        type="text"
+        placeholder="PM-7K4X92"
+        [ngModel]="code()"
+        (ngModelChange)="code.set($event)"
+        (keyup.enter)="rechercher()"
+      />
+    </div>
+
+    <button class="btn btn--primary" [disabled]="enCours() || !code()" (click)="rechercher()">
+      {{ enCours() ? 'Recherche...' : 'Consulter' }}
+    </button>
+
+    @if (erreur()) {
+      <p class="suivre__erreur">{{ erreur() }}</p>
+    }
+
+    @if (resultat(); as res) {
+      <div class="suivre__resultat">
+        <div class="suivre__row">
+          <span>Formule</span>
+          <strong>{{ res.formuleNom }}</strong>
+        </div>
+        <div class="suivre__row">
+          <span>Date</span>
+          <strong>{{ res.dateReservation }}</strong>
+        </div>
+        <div class="suivre__row">
+          <span>Heure</span>
+          <strong>{{ res.heureReservation }}</strong>
+        </div>
+        <div class="suivre__row">
+          <span>Statut</span>
+          <strong class="suivre__statut" [class]="'suivre__statut--' + res.statut.toLowerCase()">
+            {{ res.statut }}
+          </strong>
+        </div>
+
+        @if (res.statut !== 'ANNULEE' && !confirmationAnnulation()) {
+          <button class="btn btn--secondary suivre__annuler" (click)="demanderAnnulation()">
+            Annuler ma réservation
+          </button>
+        }
+
+        @if (confirmationAnnulation()) {
+          <div class="suivre__confirm">
+            <p>Êtes-vous sûr de vouloir annuler cette réservation ?</p>
+            <div class="suivre__confirm-actions">
+              <button class="btn btn--secondary" (click)="annulerNon()">Non</button>
+              <button class="btn btn--primary" [disabled]="annulationEnCours()" (click)="annulerConfirme()">
+                {{ annulationEnCours() ? 'Annulation...' : 'Oui, annuler' }}
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>

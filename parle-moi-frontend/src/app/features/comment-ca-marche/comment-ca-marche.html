@@ -1,0 +1,16 @@
+<section class="ccm">
+  <h1>Comment ça marche</h1>
+  <p class="ccm__subtitle">C'est aussi simple que ça.</p>
+
+  <div class="ccm__grid">
+    @for (e of etapes; track e.num) {
+      <div class="ccm__step">
+        <span class="ccm__number">{{ e.num }}</span>
+        <h3>{{ e.titre }}</h3>
+        <p>{{ e.texte }}</p>
+      </div>
+    }
+  </div>
+
+  <a routerLink="/reservation" class="btn btn--primary">Prendre rendez-vous</a>
+</section>

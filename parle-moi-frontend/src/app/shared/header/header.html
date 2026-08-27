@@ -1,0 +1,49 @@
+<header class="header">
+  <a routerLink="/" class="header__logo">PARLE-MOI</a>
+
+  <button class="header__burger" (click)="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <nav class="header__nav" [class.header__nav--open]="menuOuvert()">
+    <a routerLink="/">Accueil</a>
+
+    <div class="header__dropdown">
+      <button (click)="toggleServices()">
+        Services
+        <span class="header__arrow" [class.header__arrow--open]="servicesOuvert()">▾</span>
+      </button>
+      @if (servicesOuvert()) {
+        <div class="header__submenu">
+          <a routerLink="/services/ecoute-discussion">Écoute & discussion</a>
+          <a routerLink="/services/soutien-rupture">Soutien après une rupture</a>
+          <a routerLink="/services/difficultes-relationnelles">Difficultés relationnelles</a>
+          <a routerLink="/services/motivation">Motivation & encouragement</a>
+          <a routerLink="/services/conversation-libre">Conversation libre</a>
+        </div>
+      }
+    </div>
+
+    <div class="header__dropdown">
+      <button (click)="toggleFormules()">
+        Formules
+        <span class="header__arrow" [class.header__arrow--open]="formulesOuvert()">▾</span>
+      </button>
+      @if (formulesOuvert()) {
+        <div class="header__submenu">
+          <a routerLink="/formules/decouverte">Découverte</a>
+          <a routerLink="/formules/confort">Confort</a>
+          <a routerLink="/formules/premium">Premium</a>
+        </div>
+      }
+    </div>
+
+    <a routerLink="/confidentialite">Confidentialité</a>
+    <a routerLink="/comment-ca-marche">Comment ça marche</a>
+    <a routerLink="/faq">FAQ</a>
+    <a routerLink="/suivre">Suivre ma demande</a>
+  </nav>
+
+
+  <a routerLink="/reservation" class="header__cta">Prendre rendez-vous</a>
+</header>

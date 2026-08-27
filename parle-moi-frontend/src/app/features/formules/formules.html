@@ -1,0 +1,39 @@
+@if (formuleActive(); as f) {
+  <section class="formule-detail">
+    <a routerLink="/formules" class="formule-detail__back">← Toutes les formules</a>
+    <h1>{{ f.nom }}</h1>
+    <p class="formule-detail__prix">{{ f.prix }} · {{ f.duree }}</p>
+    <ul class="formule-detail__inclus">
+      @for (item of f.inclus; track item) {
+        <li>✓ {{ item }}</li>
+      }
+    </ul>
+    <a routerLink="/reservation" class="btn btn--primary">Réserver</a>
+  </section>
+} @else {
+  <section class="formules">
+    <h1 class="formules__title">Nos formules</h1>
+
+    <div class="formules__grid">
+      @for (f of formules(); track f.slug) {
+        <div class="formule-card" [class.formule-card--highlight]="!!f.badge">
+          @if (f.badge) {
+            <span class="formule-card__badge">{{ f.badge }}</span>
+          }
+          <h3>{{ f.nom }}</h3>
+          <p class="formule-card__prix">{{ f.prix }}</p>
+          <p class="formule-card__duree">{{ f.duree }}</p>
+          <ul>
+            @for (item of f.inclus; track item) {
+              <li>✓ {{ item }}</li>
+            }
+          </ul>
+          <div class="formule-card__actions">
+            <a [routerLink]="['/formules', f.slug]">En savoir plus</a>
+            <a routerLink="/reservation" class="btn btn--primary btn--small">Réserver</a>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+}

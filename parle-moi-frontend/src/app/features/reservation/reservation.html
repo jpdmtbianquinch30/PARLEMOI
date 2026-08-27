@@ -1,0 +1,108 @@
+@if (confirmation(); as res) {
+  <section class="confirmation">
+    <h1>Votre réservation est confirmée.</h1>
+    <p class="confirmation__label">Votre code de réservation</p>
+    <p class="reservation-code confirmation__code">{{ res.code }}</p>
+    <p class="confirmation__warning">⚠️ Conservez ce code. Il est nécessaire pour retrouver votre réservation.</p>
+    <button class="btn btn--primary" (click)="copierCode()">Copier le code</button>
+  </section>
+} @else {
+  <section class="reservation">
+    <h1 class="reservation__title">
+      @switch (etape()) {
+        @case (1) { Choisis ta formule }
+        @case (2) { Choisis une date }
+        @case (3) { Choisis un créneau }
+        @case (4) { Un dernier détail, si tu veux }
+      }
+    </h1>
+
+    <div class="reservation__card">
+      <div class="reservation__steps">
+        <div class="step" [class.active]="etape() === 1" [class.done]="etape() > 1">
+          <span class="step__number">1</span>
+          <span class="step__label">Formule</span>
+        </div>
+        <div class="step__line" [class.done]="etape() > 1"></div>
+        <div class="step" [class.active]="etape() === 2" [class.done]="etape() > 2">
+          <span class="step__number">2</span>
+          <span class="step__label">Date</span>
+        </div>
+        <div class="step__line" [class.done]="etape() > 2"></div>
+        <div class="step" [class.active]="etape() === 3" [class.done]="etape() > 3">
+          <span class="step__number">3</span>
+          <span class="step__label">Heure</span>
+        </div>
+        <div class="step__line" [class.done]="etape() > 3"></div>
+        <div class="step" [class.active]="etape() === 4">
+          <span class="step__number">4</span>
+          <span class="step__label">Sujet</span>
+        </div>
+      </div>
+
+      @if (etape() === 1) {
+        <div class="reservation__grid">
+          @for (f of formules(); track f.id) {
+            <button
+              class="formule-card"
+              [class.formule-card--active]="formuleChoisie()?.id === f.id"
+              (click)="choisirFormule(f)">
+              <h3>{{ f.nom }}</h3>
+              <p>{{ f.duree }}</p>
+              <p class="formule-card__prix">{{ f.prix }}</p>
+            </button>
+          }
+        </div>
+      }
+
+      @if (etape() === 2) {
+        <div class="reservation__field">
+          <label for="date">Date souhaitée</label>
+          <input id="date" type="date" [ngModel]="dateChoisie()" (ngModelChange)="dateChoisie.set($event)" />
+        </div>
+      }
+
+      @if (etape() === 3) {
+        <div class="reservation__grid reservation__grid--creneaux">
+          @for (h of creneauxDisponibles(); track h) {
+            <button
+              class="creneau"
+              [class.creneau--active]="heureChoisie() === h"
+              (click)="choisirHeure(h)">
+              {{ h }}
+            </button>
+          }
+        </div>
+      }
+
+      @if (etape() === 4) {
+        <div class="reservation__field">
+          <label for="sujet">Sujet (facultatif)</label>
+          <select id="sujet" [ngModel]="sujetOptionnel()" (ngModelChange)="sujetOptionnel.set($event)">
+            @for (s of sujets; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+
+        @if (erreur()) {
+          <p class="reservation__erreur">{{ erreur() }}</p>
+        }
+      }
+
+      <div class="reservation__actions">
+        @if (etape() > 1) {
+          <button class="btn btn--secondary" (click)="precedent()">Retour</button>
+        }
+
+        @if (etape() < 4) {
+          <button class="btn btn--primary" [disabled]="!peutContinuer()" (click)="suivant()">Suivant</button>
+        } @else {
+          <button class="btn btn--primary" [disabled]="enCours()" (click)="confirmer()">
+            {{ enCours() ? 'Confirmation...' : 'Confirmer ma réservation' }}
+          </button>
+        }
+      </div>
+    </div>
+  </section>
+}

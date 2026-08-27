@@ -1,0 +1,126 @@
+.formules {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-md);
+  box-sizing: border-box;
+
+  &__title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-lg);
+  }
+}
+
+.formule-card {
+  position: relative;
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl) var(--space-lg);
+  box-shadow: 0 10px 40px rgba(26, 27, 46, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+
+  &--highlight {
+    border: 2px solid var(--color-corail);
+    transform: scale(1.02);
+  }
+
+  &__badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-corail);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 4px 14px;
+    border-radius: 999px;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    margin-top: var(--space-sm);
+  }
+
+  &__prix {
+    color: var(--color-teal);
+    font-weight: 700;
+    font-size: 1.4rem;
+  }
+
+  &__duree {
+    color: var(--color-encre-muted);
+    font-size: 0.9rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: var(--space-md);
+    flex-grow: 1;
+
+    li {
+      font-size: 0.9rem;
+      color: var(--color-encre-muted);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    a:not(.btn) {
+      color: var(--color-teal);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.formule-detail {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-md);
+  text-align: center;
+
+  &__back {
+    display: inline-block;
+    color: var(--color-encre-muted);
+    font-size: 0.9rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  h1 {
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+  }
+
+  &__prix {
+    color: var(--color-teal);
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin: var(--space-sm) 0 var(--space-lg);
+  }
+
+  &__inclus {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-xl);
+    color: var(--color-encre-muted);
+  }
+}

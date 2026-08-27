@@ -1,0 +1,56 @@
+<section class="pourquoi">
+  <h2>Ici, tu peux être toi-même.</h2>
+  <p class="pourquoi__subtitle">Un espace pensé pour permettre à chacun de parler librement dans un environnement de confiance.</p>
+
+  <div class="pourquoi__grid">
+    @for (a of atouts; track a.titre) {
+      <div class="atout-card">
+        <h3>{{ a.titre }}</h3>
+        <p>{{ a.texte }}</p>
+      </div>
+    }
+  </div>
+</section>
+<section class="hero">
+  <div class="hero__content">
+    <!-- texte existant -->
+  </div>
+  <img src="home.png" alt="" class="hero__image" />
+</section>
+<section class="formules-apercu">
+  <h2>Nos formules</h2>
+
+  <div class="formules-apercu__grid">
+    @for (f of formulesApercu; track f.nom) {
+      <div class="formule-mini" [class.formule-mini--highlight]="!!f.badge">
+        @if (f.badge) {
+          <span class="formule-mini__badge">{{ f.badge }}</span>
+        }
+        <h3>{{ f.nom }}</h3>
+        <p class="formule-mini__prix">{{ f.prix }}</p>
+        <p class="formule-mini__duree">{{ f.duree }}</p>
+      </div>
+    }
+  </div>
+
+  <a routerLink="/formules" class="formules-apercu__link">Voir toutes les formules →</a>
+</section>
+
+<section class="temoignages">
+  <h2>Ils ont apprécié leur moment d'écoute.</h2>
+
+  <div class="temoignages__grid">
+    @for (t of temoignages(); track t.signature) {
+      <blockquote>
+        <p>« {{ t.texte }} »</p>
+        {{ t.signature }}
+      </blockquote>
+    }
+  </div>
+</section>
+
+<section class="cta-final">
+  <h2>Tu as besoin de parler ?</h2>
+  <p>Prends simplement un moment pour toi. Pas de compte. Pas de jugement. Juste un espace pour parler.</p>
+  <a routerLink="/reservation" class="btn btn--primary">Prendre rendez-vous</a>
+</section>

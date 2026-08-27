@@ -1,0 +1,42 @@
+.faq {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-md);
+
+  h1 {
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    text-align: center;
+    margin-bottom: var(--space-xl);
+  }
+
+  &__item {
+    border-bottom: 1px solid rgba(35, 35, 56, 0.08);
+    padding: var(--space-md) 0;
+  }
+
+  &__question {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  &__arrow {
+    transition: transform 0.2s ease;
+    color: var(--color-corail);
+
+    &--open {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__reponse {
+    color: var(--color-encre-muted);
+    margin-top: var(--space-sm);
+    line-height: 1.6;
+  }
+}
