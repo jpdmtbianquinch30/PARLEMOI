@@ -1,6 +1,7 @@
 @if (serviceActif(); as s) {
   <section class="service-detail">
     <a routerLink="/services" class="service-detail__back">← Tous les services</a>
+    <img src="service-{{ s.slug }}.png" alt="" class="service-detail__image" />
     <h1>{{ s.nom }}</h1>
     <p class="service-detail__description">{{ s.description }}</p>
     <p class="service-detail__text">{{ s.detail }}</p>
@@ -9,7 +10,6 @@
 } @else {
   <section class="services">
     
-  <img src="/assets/service.png" alt="" class="services__banner" />
   <h1 class="services__title">De quoi as-tu besoin ?</h1>
     <p class="services__subtitle">Choisis le type d'échange qui correspond le mieux à ce que tu ressens aujourd'hui.</p>
 
