@@ -1,7 +1,7 @@
 @if (serviceActif(); as s) {
   <section class="service-detail">
     <a routerLink="/services" class="service-detail__back">← Tous les services</a>
-    <img src="service-{{ s.slug }}.png" alt="" class="service-detail__image" />
+    <img src="service.png" alt="" class="service-detail__image" />
     <h1>{{ s.nom }}</h1>
     <p class="service-detail__description">{{ s.description }}</p>
     <p class="service-detail__text">{{ s.detail }}</p>

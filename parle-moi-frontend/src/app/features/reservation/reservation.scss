@@ -257,6 +257,13 @@ input, select {
     margin-bottom: var(--space-sm);
   }
 
+  &__visual {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: var(--space-md);
+  }
+
   &__label {
     color: var(--color-encre-muted);
   }

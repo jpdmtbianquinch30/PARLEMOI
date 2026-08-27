@@ -26,4 +26,10 @@ export class Header {
     this.formulesOuvert.update(v => !v);
     this.servicesOuvert.set(false);
   }
+
+  fermerMenu() {
+    this.menuOuvert.set(false);
+    this.servicesOuvert.set(false);
+    this.formulesOuvert.set(false);
+  }
 }

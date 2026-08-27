@@ -5,6 +5,7 @@
   <div class="pourquoi__grid">
     @for (a of atouts; track a.titre) {
       <div class="atout-card">
+        <img [src]="a.icone" alt="" class="atout-card__icon" />
         <h3>{{ a.titre }}</h3>
         <p>{{ a.texte }}</p>
       </div>
@@ -44,6 +45,7 @@
 </section>
 
 <section class="temoignages">
+  <img src="temoignages.png" alt="" class="temoignages__visual" />
   <h2>Ils ont apprécié leur moment d'écoute.</h2>
 
   <div class="temoignages__grid">
@@ -56,7 +58,7 @@
   </div>
 </section>
 
-<section class="cta-final">
+<section class="cta-final" style="background-image: url('ctafinal.png');">
   <h2>Tu as besoin de parler ?</h2>
   <p>Prends simplement un moment pour toi. Pas de compte. Pas de jugement. Juste un espace pour parler.</p>
   <a routerLink="/reservation" class="btn btn--primary">Prendre rendez-vous</a>

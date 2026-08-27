@@ -10,10 +10,10 @@ import { RouterLink } from '@angular/router';
 })
 export class Home {
   atouts = [
-    { titre: 'Écoute', texte: 'Une écoute attentive, sans interruption et sans jugement.' },
-    { titre: 'Bienveillance', texte: 'Un échange humain dans un environnement respectueux.' },
-    { titre: 'Confidentialité', texte: 'Une réservation conçue pour préserver votre vie privée.' },
-    { titre: 'Sans jugement', texte: 'Vous pouvez parler librement de ce que vous ressentez.' }
+    { titre: 'Écoute', texte: 'Une écoute attentive, sans interruption et sans jugement.', icone: 'ecoute.png' },
+    { titre: 'Bienveillance', texte: 'Un échange humain dans un environnement respectueux.', icone: 'hands.png' },
+    { titre: 'Confidentialité', texte: 'Une réservation conçue pour préserver votre vie privée.', icone: 'lock.png' },
+    { titre: 'Sans jugement', texte: 'Vous pouvez parler librement de ce que vous ressentez.', icone: 'heart.png' }
   ];
 
   formulesApercu = [

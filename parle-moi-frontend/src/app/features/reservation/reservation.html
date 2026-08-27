@@ -1,5 +1,6 @@
 @if (confirmation(); as res) {
   <section class="confirmation">
+    <img src="Formulaire.png" alt="" class="confirmation__visual" />
     <h1>Votre réservation est confirmée.</h1>
     <p class="confirmation__label">Votre code de réservation</p>
     <p class="reservation-code confirmation__code">{{ res.code }}</p>
