@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 mvc.matcher("/api/conversations/**"),
                                 mvc.matcher("/api/creneaux/**"),
                                 mvc.matcher("/api/services/**"),
+                                mvc.matcher("/api/paiements/**"),
                                 mvc.matcher("/ws/**")
                         ).permitAll()
 
