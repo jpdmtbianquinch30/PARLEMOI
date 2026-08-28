@@ -9,6 +9,14 @@ import { RouterLink } from '@angular/router';
   styleUrl: './home.scss'
 })
 export class Home {
+  badgesConfiance = ['100% anonyme', 'Sans jugement', 'Confidentiel'];
+
+  stats = [
+    { valeur: '100%', label: 'Anonyme' },
+    { valeur: '3', label: 'Formules flexibles' },
+    { valeur: '0', label: 'Jugement' }
+  ];
+
   atouts = [
     { titre: 'Écoute', texte: 'Une écoute attentive, sans interruption et sans jugement.', icone: 'ecoute.png' },
     { titre: 'Bienveillance', texte: 'Un échange humain dans un environnement respectueux.', icone: 'hands.png' },

@@ -34,10 +34,12 @@
       top: 64px;
       left: 0;
       right: 0;
+      bottom: 0;
       background: white;
       padding: var(--space-md) var(--space-lg) var(--space-lg);
       box-shadow: 0 12px 30px rgba(26, 27, 46, 0.12);
       z-index: 199;
+      overflow-y: auto;
 
       @media (min-width: 768px) {
         position: static;
@@ -45,10 +47,11 @@
         box-shadow: none;
         padding: 0;
         background: transparent;
+        overflow: visible;
       }
     }
 
-    a {
+    > a {
       padding: var(--space-sm) 0;
 
       @media (min-width: 768px) {
@@ -60,21 +63,33 @@
   &__dropdown {
     position: relative;
 
-    button {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: none;
-      font-size: 0.95rem;
-      color: var(--color-encre);
-      padding: var(--space-sm) 0;
-      width: 100%;
-      justify-content: space-between;
-
-      @media (min-width: 768px) {
-        width: auto;
-        padding: 0;
+    // Desktop uniquement : le survol (ou le focus clavier) revele le sous-menu.
+    // C'est ce qui remplace le clic obligatoire d'avant.
+    @media (min-width: 768px) {
+      &:hover .header__submenu,
+      &:focus-within .header__submenu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
       }
+    }
+  }
+
+  &__dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    font-size: 0.95rem;
+    color: var(--color-encre);
+    padding: var(--space-sm) 0;
+    width: 100%;
+    justify-content: space-between;
+
+    @media (min-width: 768px) {
+      width: auto;
+      padding: 0;
     }
   }
 
@@ -85,44 +100,127 @@
     &--open {
       transform: rotate(180deg);
     }
+
+    @media (min-width: 768px) {
+      .header__dropdown:hover &,
+      .header__dropdown:focus-within & {
+        transform: rotate(180deg);
+      }
+    }
   }
 
-    &__submenu {
-    position: static;
+  &__submenu {
+    // Mobile : masque par defaut, revele par la classe --open (clic, pas de survol tactile)
+    display: none;
     background: var(--color-voile);
     border-radius: var(--radius-sm);
     padding: var(--space-xs);
     margin-top: var(--space-xs);
-    display: flex;
     flex-direction: column;
+    gap: 2px;
+
+    &--open {
+      display: flex;
+    }
 
     @media (min-width: 768px) {
+      // Desktop : toujours dans le DOM, mais invisible tant qu'on ne survole pas le parent
+      display: flex;
+      flex-direction: column;
       position: absolute;
       top: calc(100% + var(--space-xs));
       left: 0;
       background: white;
-      box-shadow: 0 8px 24px rgba(26, 27, 46, 0.12);
-      min-width: 220px;
+      box-shadow: 0 16px 40px rgba(26, 27, 46, 0.14);
+      border-radius: var(--radius-md);
+      min-width: 320px;
+      padding: var(--space-sm);
       z-index: 210;
-    }
 
-    a {
-      padding: var(--space-xs) var(--space-sm);
-      border-radius: var(--radius-sm);
-      font-size: 0.9rem;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
 
-      &:hover {
-        background: rgba(35, 35, 56, 0.04);
+      &--mega {
+        min-width: 380px;
       }
     }
+  }
 
-    &-all {
-      font-weight: 700 !important;
-      color: var(--color-corail) !important;
-      border-bottom: 1px solid rgba(35, 35, 56, 0.08);
-      margin-bottom: var(--space-xs);
-      padding-bottom: var(--space-xs) !important;
+  &__submenu-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: rgba(198, 102, 122, 0.08);
     }
+  }
+
+  &__submenu-titre {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--color-encre);
+  }
+
+  &__submenu-texte {
+    font-size: 0.8rem;
+    color: var(--color-encre-muted);
+    line-height: 1.4;
+  }
+
+  &__submenu-meta {
+    font-size: 0.8rem;
+    color: var(--color-teal);
+    font-weight: 600;
+  }
+
+  &__submenu-voir-tout {
+    display: block;
+    margin-top: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-corail);
+    border-top: 1px solid rgba(35, 35, 56, 0.08);
+    padding-top: var(--space-sm);
+
+    &:hover {
+      color: var(--color-corail-hover);
+    }
+  }
+
+  &__link--actif {
+    color: var(--color-corail) !important;
+    font-weight: 600;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--color-corail);
+      border-radius: 2px;
+
+      @media (max-width: 767px) {
+        display: none;
+      }
+    }
+  }
+
+  &__sublink--actif {
+    .header__submenu-titre {
+      color: var(--color-corail);
+    }
+    background: rgba(198, 102, 122, 0.08);
   }
 
   &__cta {

@@ -6,46 +6,75 @@
   </button>
 
   <nav class="header__nav" [class.header__nav--open]="menuOuvert()">
-  <a routerLink="/" (click)="fermerMenu()">Accueil</a>
+    <a routerLink="/" routerLinkActive="header__link--actif" [routerLinkActiveOptions]="{exact: true}" (click)="fermerMenu()">Accueil</a>
 
-  <div class="header__dropdown">
-    <button (click)="toggleServices()">
-      Services
-      <span class="header__arrow" [class.header__arrow--open]="servicesOuvert()">▾</span>
-    </button>
-    @if (servicesOuvert()) {
-  <div class="header__submenu">
-    <a routerLink="/services" (click)="fermerMenu()" class="header__submenu-all">Tous les services →</a>
-    <a routerLink="/services/ecoute-discussion" (click)="fermerMenu()">Écoute & discussion</a>
-    <a routerLink="/services/soutien-rupture" (click)="fermerMenu()">Soutien après une rupture</a>
-    <a routerLink="/services/difficultes-relationnelles" (click)="fermerMenu()">Difficultés relationnelles</a>
-    <a routerLink="/services/motivation" (click)="fermerMenu()">Motivation & encouragement</a>
-    <a routerLink="/services/conversation-libre" (click)="fermerMenu()">Conversation libre</a>
-  </div>
-}
-  </div>
+    <div class="header__dropdown">
+      <button
+        class="header__dropdown-trigger"
+        [class.header__link--actif]="servicesActif()"
+        (click)="toggleServices()">
+        Services
+        <span class="header__arrow" [class.header__arrow--open]="servicesOuvert()">▾</span>
+      </button>
 
-  <div class="header__dropdown">
-    <button (click)="toggleFormules()">
-      Formules
-      <span class="header__arrow" [class.header__arrow--open]="formulesOuvert()">▾</span>
-    </button>
-    @if (formulesOuvert()) {
-      <div class="header__submenu">
-        <a routerLink="/formules" (click)="fermerMenu()" class="header__submenu-all">Toutes les formules →</a>
-        <a routerLink="/formules/decouverte" (click)="fermerMenu()">Découverte</a>
-        <a routerLink="/formules/confort" (click)="fermerMenu()">Confort</a>
-        <a routerLink="/formules/premium" (click)="fermerMenu()">Premium</a>
+      <div class="header__submenu header__submenu--mega" [class.header__submenu--open]="servicesOuvert()">
+        <a routerLink="/services/ecoute-discussion" routerLinkActive="header__sublink--actif" (click)="fermerMenu()" class="header__submenu-item">
+          <span class="header__submenu-titre">Écoute & discussion</span>
+          <span class="header__submenu-texte">Un moment pour parler librement avec une personne attentive.</span>
+        </a>
+        <a routerLink="/services/soutien-rupture" routerLinkActive="header__sublink--actif" (click)="fermerMenu()" class="header__submenu-item">
+          <span class="header__submenu-titre">Soutien après une rupture</span>
+          <span class="header__submenu-texte">Un espace pour exprimer ses émotions après une séparation.</span>
+        </a>
+        <a routerLink="/services/difficultes-relationnelles" routerLinkActive="header__sublink--actif" (click)="fermerMenu()" class="header__submenu-item">
+          <span class="header__submenu-titre">Difficultés relationnelles</span>
+          <span class="header__submenu-texte">Parler des difficultés liées au couple, à l'amitié ou aux relations.</span>
+        </a>
+        <a routerLink="/services/motivation" routerLinkActive="header__sublink--actif" (click)="fermerMenu()" class="header__submenu-item">
+          <span class="header__submenu-titre">Motivation & encouragement</span>
+          <span class="header__submenu-texte">Un échange pour retrouver confiance et motivation.</span>
+        </a>
+        <a routerLink="/services/conversation-libre" routerLinkActive="header__sublink--actif" (click)="fermerMenu()" class="header__submenu-item">
+          <span class="header__submenu-titre">Conversation libre</span>
+          <span class="header__submenu-texte">Tu veux simplement parler ? Réserve un moment d'écoute.</span>
+        </a>
+
+        <a routerLink="/services" (click)="fermerMenu()" class="header__submenu-voir-tout">Voir tous les services →</a>
       </div>
-    }
-  </div>
+    </div>
 
-  <a routerLink="/confidentialite" (click)="fermerMenu()">Confidentialité</a>
-  <a routerLink="/comment-ca-marche" (click)="fermerMenu()">Comment ça marche</a>
-  <a routerLink="/faq" (click)="fermerMenu()">FAQ</a>
-  <a routerLink="/suivre" (click)="fermerMenu()">Suivre ma demande</a>
-</nav>
+    <div class="header__dropdown">
+      <button
+        class="header__dropdown-trigger"
+        [class.header__link--actif]="formulesActif()"
+        (click)="toggleFormules()">
+        Formules
+        <span class="header__arrow" [class.header__arrow--open]="formulesOuvert()">▾</span>
+      </button>
 
+      <div class="header__submenu" [class.header__submenu--open]="formulesOuvert()">
+        <a routerLink="/formules/decouverte" routerLinkActive="header__sublink--actif" (click)="fermerMenu()" class="header__submenu-item">
+          <span class="header__submenu-titre">Découverte</span>
+          <span class="header__submenu-meta">10 000 FCFA · 30 min</span>
+        </a>
+        <a routerLink="/formules/confort" routerLinkActive="header__sublink--actif" (click)="fermerMenu()" class="header__submenu-item">
+          <span class="header__submenu-titre">Confort</span>
+          <span class="header__submenu-meta">15 000 FCFA · 1 h</span>
+        </a>
+        <a routerLink="/formules/premium" routerLinkActive="header__sublink--actif" (click)="fermerMenu()" class="header__submenu-item">
+          <span class="header__submenu-titre">Premium</span>
+          <span class="header__submenu-meta">25 000 FCFA · 2 h</span>
+        </a>
+
+        <a routerLink="/formules" (click)="fermerMenu()" class="header__submenu-voir-tout">Voir toutes les formules →</a>
+      </div>
+    </div>
+
+    <a routerLink="/confidentialite" routerLinkActive="header__link--actif" (click)="fermerMenu()">Confidentialité</a>
+    <a routerLink="/comment-ca-marche" routerLinkActive="header__link--actif" (click)="fermerMenu()">Comment ça marche</a>
+    <a routerLink="/faq" routerLinkActive="header__link--actif" (click)="fermerMenu()">FAQ</a>
+    <a routerLink="/suivre" routerLinkActive="header__link--actif" (click)="fermerMenu()">Suivre ma demande</a>
+  </nav>
 
   <a routerLink="/reservation" class="header__cta">Prendre rendez-vous</a>
 </header>

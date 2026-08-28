@@ -12,25 +12,31 @@
     }
   </div>
 </section>
+
 <section class="hero">
-  <div class="hero__trust">
-  <span>🔒 100% anonyme</span>
-  <span>💬 Sans jugement</span>
-  <span>🕊️ Confidentiel</span>
-  </div>
-  
   <div class="hero__content">
+    <div class="hero__badges">
+      @for (b of badgesConfiance; track b) {
+        <span class="hero__badge">{{ b }}</span>
+      }
+    </div>
+
     <h2>Prends soin de toi</h2>
     <p>Un moment pour toi, sans jugement. Parle librement avec un écoutant bienveillant.</p>
     <a routerLink="/reservation" class="btn btn--primary">Commencer maintenant</a>
   </div>
 </section>
-<section class="formules-apercu">
-  <section class="chiffres">
-  <div class="chiffres__item"><strong>100%</strong><span>Anonyme</span></div>
-  <div class="chiffres__item"><strong>3</strong><span>Formules flexibles</span></div>
-  <div class="chiffres__item"><strong>0</strong><span>Jugement</span></div>
+
+<section class="stats">
+  @for (s of stats; track s.label) {
+    <div class="stats__item">
+      <span class="stats__valeur">{{ s.valeur }}</span>
+      <span class="stats__label">{{ s.label }}</span>
+    </div>
+  }
 </section>
+
+<section class="formules-apercu">
   <h2>Nos formules</h2>
 
   <div class="formules-apercu__grid">
@@ -50,7 +56,6 @@
 </section>
 
 <section class="temoignages">
-  <img src="temoignages.png" alt="" class="temoignages__visual" />
   <h2>Ils ont apprécié leur moment d'écoute.</h2>
 
   <div class="temoignages__grid">
@@ -63,7 +68,7 @@
   </div>
 </section>
 
-<section class="cta-final" style="background-image: url('ctafinal.png');">
+<section class="cta-final">
   <h2>Tu as besoin de parler ?</h2>
   <p>Prends simplement un moment pour toi. Pas de compte. Pas de jugement. Juste un espace pour parler.</p>
   <a routerLink="/reservation" class="btn btn--primary">Prendre rendez-vous</a>

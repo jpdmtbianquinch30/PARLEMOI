@@ -43,6 +43,14 @@ public class SecurityConfig {
                                 mvc.matcher("/ws/**")
                         ).permitAll()
 
+                        .requestMatchers(
+                                mvc.matcher("/api/public/**"),
+                                mvc.matcher("/api/reservations/**"),
+                                mvc.matcher("/api/creneaux/**"),
+                                mvc.matcher("/api/services/**"),
+                                mvc.matcher("/ws/**")
+                        ).permitAll()
+
                         // Routes admin - protegees, authentification requise (JWT a l'etape suivante)
                         .requestMatchers(mvc.matcher("/api/admin/**")).authenticated()
 

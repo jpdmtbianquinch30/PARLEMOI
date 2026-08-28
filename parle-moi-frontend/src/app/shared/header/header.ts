@@ -1,17 +1,32 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, signal, computed, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './header.html',
   styleUrl: './header.scss'
 })
 export class Header {
+  private router = inject(Router);
+
   menuOuvert = signal(false);
   servicesOuvert = signal(false);
   formulesOuvert = signal(false);
+
+  urlActuelle = toSignal(
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      map(e => e.urlAfterRedirects)
+    ),
+    { initialValue: this.router.url }
+  );
+
+  servicesActif = computed(() => this.urlActuelle().startsWith('/services'));
+  formulesActif = computed(() => this.urlActuelle().startsWith('/formules'));
 
   toggleMenu() {
     this.menuOuvert.update(v => !v);

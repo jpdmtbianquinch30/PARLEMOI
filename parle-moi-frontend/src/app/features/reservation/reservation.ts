@@ -1,31 +1,26 @@
-import { Component, signal, computed, inject } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ReservationService, ReservationRequest, ReservationResponse } from '../../core/reservation';
-interface Formule {
-  id: string;
-  nom: string;
-  duree: string;
-  prix: string;
-}
+import { ReservationService, ReservationResponse } from '../../core/reservation';
+import { CatalogueService, FormuleApi } from '../../core/catalogue';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-reservation',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './reservation.html',
   styleUrl: './reservation.scss'
 })
-export class Reservation {
+export class Reservation implements OnInit {
   private reservationService = inject(ReservationService);
+  private catalogueService = inject(CatalogueService);
 
-  // ⚠️ Remplace ces IDs par les vrais UUID générés par ton DataSeeder
-  formules = signal<Formule[]>([
-  { id: 'fbfe6265-cab6-4ba8-94d7-129beeec37d0', nom: 'Découverte', duree: '30 min', prix: '10 000 FCFA' },
-  { id: 'b2cfd422-f92a-4a76-a6e2-31b661db57c2', nom: 'Confort', duree: '1 h', prix: '15 000 FCFA' },
-  { id: '848ff442-0eed-43b5-b975-d1a34d7c8014', nom: 'Premium', duree: '2 h', prix: '25 000 FCFA' },
-]);
+  formules = signal<FormuleApi[]>([]);
+  chargementFormules = signal(true);
+  erreurChargement = signal(false);
+
   etape = signal(1);
-  formuleChoisie = signal<Formule | null>(null);
+  formuleChoisie = signal<FormuleApi | null>(null);
   dateChoisie = signal('');
   heureChoisie = signal('');
   sujetOptionnel = signal('');
@@ -34,7 +29,7 @@ export class Reservation {
     '09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00'
   ]);
 
-  sujets = ['Je préfère ne pas préciser', 'Besoin de parler', 'Rupture', 'Relation', 'Motivation', 'Famille', 'Autre'];
+  sujets = ['Je prefere ne pas preciser', 'Besoin de parler', 'Rupture', 'Relation', 'Motivation', 'Famille', 'Autre'];
 
   enCours = signal(false);
   erreur = signal('');
@@ -47,7 +42,22 @@ export class Reservation {
     return true;
   });
 
-  choisirFormule(f: Formule) {
+  ngOnInit() {
+    this.catalogueService.lister().subscribe({
+      next: (services) => {
+        // On aplatit toutes les formules de tous les services actifs en une seule liste
+        const toutesFormules = services.flatMap(s => s.formules);
+        this.formules.set(toutesFormules);
+        this.chargementFormules.set(false);
+      },
+      error: () => {
+        this.erreurChargement.set(true);
+        this.chargementFormules.set(false);
+      }
+    });
+  }
+
+  choisirFormule(f: FormuleApi) {
     this.formuleChoisie.set(f);
   }
 
@@ -81,7 +91,7 @@ export class Reservation {
         this.enCours.set(false);
       },
       error: (err) => {
-        this.erreur.set(err.error?.message || 'Une erreur est survenue. Réessaie.');
+        this.erreur.set(err.error?.message || 'Une erreur est survenue. Reessaie.');
         this.enCours.set(false);
       }
     });

@@ -24,7 +24,7 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (serviceRepository.count() > 0) {
-            return; // deja peuple, on ne duplique jamais
+            return;
         }
 
         sn.parlemoi.backend.entity.Service service = sn.parlemoi.backend.entity.Service.builder()
@@ -35,35 +35,48 @@ public class DataSeeder implements CommandLineRunner {
                 .build();
         service = serviceRepository.save(service);
 
-        Formule formule30 = Formule.builder()
+        Formule decouverte = Formule.builder()
                 .service(service)
-                .nom("Session 30 minutes")
+                .nom("Decouverte")
                 .description("Ideal pour un premier echange")
                 .dureeMinutes(30)
-                .prix(new BigDecimal("5000.00"))
+                .prix(new BigDecimal("10000.00"))
                 .devise("XOF")
                 .ordreAffichage(1)
                 .actif(true)
                 .build();
 
-        Formule formule60 = Formule.builder()
+        Formule confort = Formule.builder()
                 .service(service)
-                .nom("Session 60 minutes")
+                .nom("Confort")
                 .description("Pour approfondir la discussion")
                 .dureeMinutes(60)
-                .prix(new BigDecimal("9000.00"))
+                .prix(new BigDecimal("15000.00"))
                 .devise("XOF")
                 .ordreAffichage(2)
                 .actif(true)
                 .build();
 
-        formuleRepository.save(formule30);
-        formuleRepository.save(formule60);
+        Formule premium = Formule.builder()
+                .service(service)
+                .nom("Premium")
+                .description("Pour un accompagnement approfondi et sans limite de temps ressentie")
+                .dureeMinutes(120)
+                .prix(new BigDecimal("25000.00"))
+                .devise("XOF")
+                .ordreAffichage(3)
+                .actif(true)
+                .build();
+
+        formuleRepository.save(decouverte);
+        formuleRepository.save(confort);
+        formuleRepository.save(premium);
 
         System.out.println("=== DONNEES DE TEST INJECTEES ===");
         System.out.println("Service ID: " + service.getId());
-        System.out.println("Formule 30min ID: " + formule30.getId());
-        System.out.println("Formule 60min ID: " + formule60.getId());
+        System.out.println("Decouverte ID: " + decouverte.getId());
+        System.out.println("Confort ID: " + confort.getId());
+        System.out.println("Premium ID: " + premium.getId());
         System.out.println("==================================");
     }
 }

@@ -42,18 +42,29 @@
       </div>
 
       @if (etape() === 1) {
-        <div class="reservation__grid">
-          @for (f of formules(); track f.id) {
-            <button
-              class="formule-card"
-              [class.formule-card--active]="formuleChoisie()?.id === f.id"
-              (click)="choisirFormule(f)">
-              <h3>{{ f.nom }}</h3>
-              <p>{{ f.duree }}</p>
-              <p class="formule-card__prix">{{ f.prix }}</p>
-            </button>
-          }
-        </div>
+        @if (chargementFormules()) {
+          <div class="reservation__etat">
+            <p>Chargement des formules...</p>
+          </div>
+        } @else if (erreurChargement()) {
+          <div class="reservation__etat reservation__etat--erreur">
+            <p>Impossible de charger les formules pour le moment.</p>
+            <p class="reservation__etat-sub">Vérifie ta connexion et réessaie dans un instant.</p>
+          </div>
+        } @else {
+          <div class="reservation__grid">
+            @for (f of formules(); track f.id) {
+              <button
+                class="formule-card"
+                [class.formule-card--active]="formuleChoisie()?.id === f.id"
+                (click)="choisirFormule(f)">
+                <h3>{{ f.nom }}</h3>
+                <p>{{ f.dureeMinutes }} min</p>
+                <p class="formule-card__prix">{{ f.prix | number:'1.0-0':'fr' }} {{ f.devise }}</p>
+              </button>
+            }
+          </div>
+        }
       }
 
       @if (etape() === 2) {
