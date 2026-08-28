@@ -53,4 +53,15 @@ public class GlobalExceptionHandler {
         ErreurResponse erreur = ErreurResponse.de(500, "Erreur interne", "Une erreur inattendue est survenue");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erreur);
     }
+    @ExceptionHandler(IdentifiantsInvalidesException.class)
+    public ResponseEntity<ErreurResponse> gererIdentifiantsInvalides(IdentifiantsInvalidesException ex) {
+        ErreurResponse erreur = ErreurResponse.de(401, "Non autorise", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erreur);
+    }
+
+    @ExceptionHandler(CompteVerrouilleException.class)
+    public ResponseEntity<ErreurResponse> gererCompteVerrouille(CompteVerrouilleException ex) {
+        ErreurResponse erreur = ErreurResponse.de(423, "Compte verrouille", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.LOCKED).body(erreur);
+    }
 }

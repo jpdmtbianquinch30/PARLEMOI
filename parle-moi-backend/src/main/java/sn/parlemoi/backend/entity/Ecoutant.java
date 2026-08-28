@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sn.parlemoi.backend.enums.DureeRetention;
+import sn.parlemoi.backend.enums.RoleEcoutant;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -33,23 +34,33 @@ public class Ecoutant {
     @Column(nullable = false)
     private String nom;
 
-    // Statut en ligne / hors ligne - controle manuel par l'ecoutante
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private RoleEcoutant role = RoleEcoutant.ECOUTANT;
+
     @Column(name = "en_ligne", nullable = false)
     @Builder.Default
     private boolean enLigne = false;
 
-    // Horaires fixes (plage possible de travail, distincte du toggle en ligne)
     @Column(name = "horaire_debut")
     private LocalTime horaireDebut;
 
     @Column(name = "horaire_fin")
     private LocalTime horaireFin;
 
-    // Retention des messages - configurable par l'ecoutante
     @Enumerated(EnumType.STRING)
     @Column(name = "duree_retention_messages", nullable = false)
     @Builder.Default
     private DureeRetention dureeRetentionMessages = DureeRetention.J7;
+
+    // Verrouillage anti brute-force sur le login
+    @Column(name = "tentatives_echouees", nullable = false)
+    @Builder.Default
+    private int tentativesEchouees = 0;
+
+    @Column(name = "verrouille_jusqua")
+    private LocalDateTime verrouilleJusqua;
 
     @Column(name = "cree_le", nullable = false, updatable = false)
     private LocalDateTime creeLe;
