@@ -1,0 +1,1 @@
+ALTER TABLE conversations ADD COLUMN etat_notification_forfait VARCHAR(30) NOT NULL DEFAULT 'AUCUNE';

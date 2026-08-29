@@ -64,4 +64,10 @@ public class GlobalExceptionHandler {
         ErreurResponse erreur = ErreurResponse.de(423, "Compte verrouille", ex.getMessage());
         return ResponseEntity.status(HttpStatus.LOCKED).body(erreur);
     }
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<ErreurResponse> gererSecurite(SecurityException ex) {
+        log.warn("Tentative d'acces refusee : {}", ex.getMessage());
+        ErreurResponse erreur = ErreurResponse.de(401, "Non autorise", "Authentification invalide");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erreur);
+    }
 }

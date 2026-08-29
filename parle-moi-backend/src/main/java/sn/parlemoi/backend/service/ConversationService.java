@@ -13,7 +13,12 @@ import sn.parlemoi.backend.exception.RessourceNonTrouveeException;
 import sn.parlemoi.backend.repository.ConversationRepository;
 import sn.parlemoi.backend.repository.EcoutantRepository;
 import sn.parlemoi.backend.repository.UtilisateurRepository;
+import sn.parlemoi.backend.dto.message.HistoriqueConversationResponse;
+import sn.parlemoi.backend.dto.message.MessageResponse;
+import sn.parlemoi.backend.entity.Message;
+import sn.parlemoi.backend.repository.MessageRepository;
 
+import java.util.List;
 import java.time.LocalDateTime;
 
 @Service
@@ -26,17 +31,20 @@ public class ConversationService {
     private final EcoutantRepository ecoutantRepository;
     private final UtilisateurRepository utilisateurRepository;
     private final CodeGeneratorService codeGeneratorService;
+    private final MessageRepository messageRepository;
 
     public ConversationService(
             ConversationRepository conversationRepository,
             EcoutantRepository ecoutantRepository,
             UtilisateurRepository utilisateurRepository,
-            CodeGeneratorService codeGeneratorService
+            CodeGeneratorService codeGeneratorService,
+            MessageRepository messageRepository
     ) {
         this.conversationRepository = conversationRepository;
         this.ecoutantRepository = ecoutantRepository;
         this.utilisateurRepository = utilisateurRepository;
         this.codeGeneratorService = codeGeneratorService;
+        this.messageRepository = messageRepository;
     }
 
     @Transactional
@@ -78,6 +86,26 @@ public class ConversationService {
     }
 
     @Transactional
+    public HistoriqueConversationResponse consulterHistorique(String code) {
+        Conversation conversation = conversationRepository.findByCode(code)
+                .orElseThrow(() -> new RessourceNonTrouveeException("Aucune conversation trouvee avec ce code"));
+
+        if (conversation.getExpireLe() != null && conversation.getExpireLe().isBefore(LocalDateTime.now())) {
+            throw new RessourceNonTrouveeException("Cette conversation a expire et n'est plus consultable");
+        }
+
+        List<Message> messages = messageRepository.findByConversationIdAndExpireLeAfterOrderByEnvoyeLeAsc(
+                conversation.getId(), LocalDateTime.now()
+        );
+
+        List<MessageResponse> messagesReponse = messages.stream()
+                .map(m -> new MessageResponse(m.getId(), m.getAuteurType(), m.getContenu(), m.getEnvoyeLe()))
+                .toList();
+
+        return new HistoriqueConversationResponse(versReponse(conversation), messagesReponse);
+    }
+
+    @Transactional
     public ConversationResponse trouverParCode(String code) {
         Conversation conversation = conversationRepository.findByCode(code)
                 .orElseThrow(() -> new RessourceNonTrouveeException("Aucune conversation trouvee avec ce code"));
@@ -96,12 +124,19 @@ public class ConversationService {
 
     private ConversationResponse versReponse(Conversation conversation) {
         int restants = Math.max(0, MESSAGES_GRATUITS_MAX - conversation.getNbMessagesGratuitsUtilises());
+
+        boolean forfaitActif = conversation.getForfaitExpireLe() != null
+                && conversation.getForfaitExpireLe().isAfter(LocalDateTime.now());
+
         return new ConversationResponse(
                 conversation.getCode(),
                 conversation.getStatut(),
                 conversation.getPositionFileAttente(),
                 conversation.getNbMessagesGratuitsUtilises(),
                 restants,
+                forfaitActif,
+                forfaitActif ? conversation.getFormule().getNom() : null,
+                conversation.getForfaitExpireLe(),
                 conversation.getExpireLe()
         );
     }

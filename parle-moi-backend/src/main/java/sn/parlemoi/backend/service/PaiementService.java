@@ -139,6 +139,10 @@ public class PaiementService {
 
         conversation.setFormule(formule);
         conversation.setForfaitExpireLe(nouvelleExpiration);
+// Reinitialise le cycle de notification pour ce nouveau forfait -
+// sans ca, un forfait renouvele apres expiration ne redeclencherait jamais
+// l'avertissement 5 min ni la notification de fin (deja marques "envoyes" precedemment).
+        conversation.setEtatNotificationForfait(sn.parlemoi.backend.enums.EtatNotificationForfait.AUCUNE);
         conversationRepository.save(conversation);
 
         messagingTemplate.convertAndSend(

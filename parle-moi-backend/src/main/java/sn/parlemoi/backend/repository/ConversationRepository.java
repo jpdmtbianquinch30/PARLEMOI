@@ -6,8 +6,11 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import sn.parlemoi.backend.entity.Conversation;
+import sn.parlemoi.backend.enums.EtatNotificationForfait;
 import sn.parlemoi.backend.enums.StatutConversation;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface ConversationRepository extends JpaRepository<Conversation, String> {
@@ -17,14 +20,19 @@ public interface ConversationRepository extends JpaRepository<Conversation, Stri
 
     long countByEcoutantIdAndStatut(String ecoutantId, StatutConversation statut);
 
-    // Verifie l'assignation sans jamais charger la relation LAZY ecoutant -
-    // evite de reproduire le bug de LazyInitializationException deja rencontre en Phase 0
     boolean existsByCodeAndEcoutantId(String code, String ecoutantId);
 
-    // Verrou pessimiste : serialise les envois concurrents sur UNE MEME conversation
-    // pour garantir que le compteur de messages gratuits ne peut jamais etre contourne
-    // par une race condition (deux messages envoyes au meme instant)
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select c from Conversation c where c.code = :code")
     Optional<Conversation> findByCodeForUpdate(@Param("code") String code);
+
+    // SCRUM-9 : forfaits dont l'expiration tombe dans les 5 prochaines minutes, pas encore avertis
+    List<Conversation> findByForfaitExpireLeBetweenAndEtatNotificationForfait(
+            LocalDateTime debut, LocalDateTime fin, EtatNotificationForfait etat
+    );
+
+    // SCRUM-18 : forfaits deja expires, pas encore notifies comme tels
+    List<Conversation> findByForfaitExpireLeBeforeAndEtatNotificationForfaitNot(
+            LocalDateTime maintenant, EtatNotificationForfait etat
+    );
 }

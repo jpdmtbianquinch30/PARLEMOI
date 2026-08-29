@@ -10,5 +10,8 @@ public record ConversationResponse(
         Integer positionFileAttente,
         int nbMessagesGratuitsUtilises,
         int nbMessagesGratuitsRestants,
+        boolean forfaitActif,
+        String formuleNom,
+        LocalDateTime forfaitExpireLe,
         LocalDateTime expireLe
 ) {}

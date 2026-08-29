@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import sn.parlemoi.backend.dto.conversation.ConversationResponse;
 import sn.parlemoi.backend.dto.conversation.DemarrerConversationRequest;
 import sn.parlemoi.backend.service.ConversationService;
+import sn.parlemoi.backend.dto.message.HistoriqueConversationResponse;
 
 @RestController
 @RequestMapping("/api/conversations")
@@ -30,5 +31,9 @@ public class ConversationController {
     @GetMapping("/{code}")
     public ResponseEntity<ConversationResponse> trouverParCode(@PathVariable String code) {
         return ResponseEntity.ok(conversationService.trouverParCode(code));
+    }
+    @GetMapping("/{code}/historique")
+    public ResponseEntity<HistoriqueConversationResponse> consulterHistorique(@PathVariable String code) {
+        return ResponseEntity.ok(conversationService.consulterHistorique(code));
     }
 }

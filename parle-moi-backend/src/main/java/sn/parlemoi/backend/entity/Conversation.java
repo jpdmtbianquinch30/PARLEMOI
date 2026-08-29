@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sn.parlemoi.backend.enums.EtatNotificationForfait;
 import sn.parlemoi.backend.enums.StatutConversation;
 
 import java.time.LocalDate;
@@ -47,12 +48,10 @@ public class Conversation {
     @Column(name = "sujet_optionnel", length = 500)
     private String sujetOptionnel;
 
-    // Forfait actif lie a la conversation (null tant que le paywall n'est pas passe)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "formule_id")
     private Formule formule;
 
-    // Programmation optionnelle - remplace l'ancienne entite Reservation isolee
     @Column(name = "date_programmee")
     private LocalDate dateProgrammee;
 
@@ -65,6 +64,13 @@ public class Conversation {
 
     @Column(name = "forfait_expire_le")
     private LocalDateTime forfaitExpireLe;
+
+    // Empeche le job de surveillance de renvoyer le meme avertissement/notification en boucle
+    // toutes les 30s pendant toute la fenetre concernee - reinitialise a chaque nouveau paiement reussi.
+    @Enumerated(EnumType.STRING)
+    @Column(name = "etat_notification_forfait", nullable = false, length = 30)
+    @Builder.Default
+    private EtatNotificationForfait etatNotificationForfait = EtatNotificationForfait.AUCUNE;
 
     @Column(name = "cree_le", nullable = false, updatable = false)
     private LocalDateTime creeLe;

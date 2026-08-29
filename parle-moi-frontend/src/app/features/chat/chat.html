@@ -1,0 +1,92 @@
+@if (etat() === 'chargement') {
+  <div class="chat-chargement">Connexion en cours...</div>
+}
+
+@if (etat() === 'erreur') {
+  <div class="chat-erreur">
+    <p>{{ erreurMessage() }}</p>
+    <a routerLink="/">Retour a l'accueil</a>
+  </div>
+}
+
+@if (etat() !== 'chargement' && etat() !== 'erreur') {
+  <div class="chat">
+    <header class="chat__entete">
+      <div class="chat__code">
+        Code : <strong>{{ code() }}</strong>
+        <span class="chat__code-note">(a conserver pour retrouver cette conversation pendant 1 mois)</span>
+      </div>
+
+      @if (conversation()?.statut === 'EN_ATTENTE') {
+        <div class="chat__attente">En file d'attente - position {{ conversation()?.positionFileAttente }}</div>
+      }
+
+      @if (conversation()?.forfaitActif) {
+        <div class="chat__forfait-actif">
+          Forfait "{{ conversation()?.formuleNom }}" actif jusqu'a {{ conversation()?.forfaitExpireLe | date:'HH:mm' }}
+        </div>
+      } @else {
+        <div class="chat__gratuit">{{ conversation()?.nbMessagesGratuitsRestants }} message(s) gratuit(s) restant(s)</div>
+      }
+    </header>
+
+    @if (banniere()) {
+      <div class="chat__banniere" (click)="fermerBanniere()">{{ banniere() }}</div>
+    }
+
+    <div class="chat__messages">
+      @for (message of messages(); track message.id) {
+        <div
+          class="chat__bulle"
+          [class.chat__bulle--utilisateur]="message.auteurType === 'UTILISATEUR'"
+          [class.chat__bulle--ecoutant]="message.auteurType === 'ECOUTANT'">
+          <p>{{ message.contenu }}</p>
+          <span class="chat__heure">{{ message.envoyeLe | date:'HH:mm' }}</span>
+        </div>
+      }
+    </div>
+
+    @if (etat() === 'paywall') {
+      <div class="chat__paywall">
+        <p>Activez un forfait pour continuer la conversation.</p>
+
+        <div class="chat__formules">
+          @for (formule of formules(); track formule.id) {
+            <button
+              type="button"
+              class="chat__formule"
+              [class.chat__formule--selectionnee]="formuleSelectionneeId() === formule.id"
+              (click)="choisirFormule(formule.id)">
+              <strong>{{ formule.nom }}</strong>
+              <span>{{ formule.prix }} {{ formule.devise }} - {{ formule.dureeMinutes }} min</span>
+            </button>
+          }
+        </div>
+
+        @if (formuleSelectionneeId() && !paiementActif()) {
+          <div class="chat__providers">
+            <button type="button" (click)="payerAvec('WAVE')" [disabled]="paiementEnCours()">Payer avec Wave</button>
+            <button type="button" (click)="payerAvec('ORANGE_MONEY')" [disabled]="paiementEnCours()">Payer avec Orange Money</button>
+          </div>
+        }
+
+        @if (paiementActif()) {
+          <div class="chat__simulation">
+            <p>Paiement initie ({{ paiementActif()?.montant }} {{ paiementActif()?.devise }}) - mode simulation actif en developpement.</p>
+            <button type="button" (click)="simulerConfirmationPaiement()">Simuler le paiement reussi</button>
+          </div>
+        }
+      </div>
+    } @else {
+      <form class="chat__saisie" (ngSubmit)="envoyerMessage()">
+        <input
+          type="text"
+          [(ngModel)]="champMessage"
+          name="message"
+          placeholder="Ecrivez votre message..."
+          autocomplete="off" />
+        <button type="submit">Envoyer</button>
+      </form>
+    }
+  </div>
+}
