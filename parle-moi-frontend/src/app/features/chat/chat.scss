@@ -138,3 +138,65 @@
   text-align: center;
   padding: 3rem 1rem;
 }
+
+.appel-bandeau {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.2rem;
+  background: var(--color-voile);
+  border-radius: var(--radius-sm);
+  margin: 0.5rem 1rem;
+
+  &--actif { background: rgba(47, 111, 99, 0.1); }
+  &--entrant { background: rgba(232, 185, 95, 0.15); }
+
+  &__actions { display: flex; gap: 0.5rem; }
+}
+
+.btn-appel {
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: var(--color-teal);
+  color: white;
+
+  &--raccrocher { background: var(--color-corail); }
+  &--accepter { background: var(--color-teal); }
+}
+
+.appel-confirmation {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 27, 46, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+
+  p {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    margin: 0;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  &__actions {
+    display: flex;
+    background: white;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+
+    button {
+      flex: 1;
+      padding: 1rem;
+      font-weight: 600;
+    }
+  }
+
+  &__confirmer {
+    color: var(--color-corail);
+  }
+}

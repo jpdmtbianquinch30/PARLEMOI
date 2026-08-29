@@ -18,6 +18,13 @@ export interface ConversationApi {
   expireLe: string | null;
 }
 
+export interface TurnCredentialsApi {
+  username: string;
+  credential: string;
+  ttlSecondes: number;
+  urls: string[];
+}
+
 export interface MessageApi {
   id: string;
   auteurType: 'UTILISATEUR' | 'ECOUTANT';
@@ -62,5 +69,9 @@ export class ConversationService {
 
   confirmerPaiementSimule(paiementId: string): Observable<void> {
     return this.http.post<void>(`${environment.apiUrl}/paiements/${paiementId}/simulateur/confirmer`, {});
+  }
+
+    turnCredentials(code: string): Observable<TurnCredentialsApi> {
+    return this.http.get<TurnCredentialsApi>(`${this.baseUrl}/${code}/turn-credentials`);
   }
 }

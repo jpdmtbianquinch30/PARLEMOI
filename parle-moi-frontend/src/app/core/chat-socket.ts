@@ -40,7 +40,12 @@ export class ChatSocketService {
 
   connecte = signal(false);
 
-  connecter(code: string, onEvenement: (evenement: EvenementChat) => void, jwt?: string): void {
+  connecter(
+    code: string,
+    onEvenement: (evenement: EvenementChat) => void,
+    onEvenementAppel?: (evenement: EvenementAppel) => void,
+    jwt?: string
+  ): void {
     this.deconnecter();
 
     const headers: Record<string, string> = jwt
@@ -56,6 +61,15 @@ export class ChatSocketService {
         this.client!.subscribe(`/topic/conversations/${code}`, (frame: IMessage) => {
           this.repartir(frame, onEvenement);
         });
+
+        // Abonnement appel fait ICI, dans le meme callback onConnect - c'est le seul
+        // moment ou le client est garanti connecte. L'appeler juste apres connecter()
+        // etait une race condition : le STOMP client peut ne pas encore etre pret.
+        if (onEvenementAppel) {
+          this.client!.subscribe(`/topic/conversations/${code}/appel`, (frame: IMessage) => {
+            onEvenementAppel(JSON.parse(frame.body) as EvenementAppel);
+          });
+        }
       },
       onDisconnect: () => this.connecte.set(false),
       onStompError: () => this.connecte.set(false)
@@ -74,6 +88,16 @@ export class ChatSocketService {
     });
   }
 
+  envoyerSignalAppel(code: string, type: string, contenu: string | null): void {
+    if (!this.client || !this.client.connected) {
+      return;
+    }
+    this.client.publish({
+      destination: `/app/conversations/${code}/appel/signal`,
+      body: JSON.stringify({ type, contenu })
+    });
+  }
+
   deconnecter(): void {
     if (this.client) {
       this.client.deactivate();
@@ -82,11 +106,6 @@ export class ChatSocketService {
     this.connecte.set(false);
   }
 
-  // Distingue 4 formes de payload possibles sur le meme topic :
-  // - un vrai message a un champ "id"
-  // - FORFAIT_ACTIVE (envoye par PaiementService) a un champ "formuleNom", pas "message"
-  // - AVERTISSEMENT_FIN_FORFAIT / FORFAIT_TERMINE (ForfaitSurveillanceService) ont un champ "message"
-  // - tout le reste (ERREUR/PAYWALL/PAYWALL_IMMINENT, MessageService) est un evenement systeme
   private repartir(frame: IMessage, onEvenement: (evenement: EvenementChat) => void): void {
     const donnees = JSON.parse(frame.body);
 
@@ -94,37 +113,14 @@ export class ChatSocketService {
       onEvenement({ categorie: 'message', donnees: donnees as MessageApi });
       return;
     }
-
     if (donnees.type === 'FORFAIT_ACTIVE') {
       onEvenement({ categorie: 'forfait-active', donnees: donnees as EvenementForfaitActive });
       return;
     }
-
     if (donnees.type === 'AVERTISSEMENT_FIN_FORFAIT' || donnees.type === 'FORFAIT_TERMINE') {
       onEvenement({ categorie: 'forfait-statut', donnees: donnees as EvenementForfaitStatut });
       return;
     }
-
     onEvenement({ categorie: 'systeme', donnees: donnees as EvenementSysteme });
   }
-  envoyerSignalAppel(code: string, type: string, contenu: string | null): void {
-  const client = (this as any).client as Client | null;
-  if (!client || !client.connected) {
-    return;
-  }
-  client.publish({
-    destination: `/app/conversations/${code}/appel/signal`,
-    body: JSON.stringify({ type, contenu })
-  });
-}
-
-ecouterAppel(code: string, onEvenement: (evenement: EvenementAppel) => void): void {
-  const client = (this as any).client as Client | null;
-  if (!client || !client.connected) {
-    return;
-  }
-  client.subscribe(`/topic/conversations/${code}/appel`, (frame) => {
-    onEvenement(JSON.parse(frame.body) as EvenementAppel);
-  });
-}
 }

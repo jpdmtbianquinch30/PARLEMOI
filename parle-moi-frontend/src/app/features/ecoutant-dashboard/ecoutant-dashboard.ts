@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { EcoutantService, EcoutantProfilApi, ConversationEcoutantApi } from '../../core/ecoutant';
 import { DureeRetention } from '../../core/conversation';
 import { AuthService } from '../../core/auth';
@@ -9,7 +9,7 @@ import { AuthService } from '../../core/auth';
 @Component({
   selector: 'app-ecoutant-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './ecoutant-dashboard.html',
   styleUrl: './ecoutant-dashboard.scss'
 })

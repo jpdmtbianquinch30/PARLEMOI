@@ -154,6 +154,26 @@ export class WebrtcCallService {
     this.terminer(true);
   }
 
+    // Point d'entree unique pour dispatcher un evenement d'appel recu par WebSocket -
+  // reutilise a l'identique cote utilisateur et cote ecoutante, jamais duplique.
+  traiterEvenementAppel(code: string, evenement: import('./chat-socket').EvenementAppel): void {
+    switch (evenement.type) {
+      case 'OFFRE':
+        this.recevoirSonnerieEntrante(code, evenement.contenu!);
+        break;
+      case 'REPONSE':
+        this.recevoirReponse(evenement.contenu!);
+        break;
+      case 'CANDIDAT':
+        this.recevoirCandidat(evenement.contenu!);
+        break;
+      case 'REFUSER':
+      case 'RACCROCHER':
+        this.terminerSansSignal();
+        break;
+    }
+  }
+
   // Appele quand l'AUTRE partie a raccroche ou refuse - ne renvoie pas de signal, juste nettoyage local
   terminerSansSignal(): void {
     this.terminer(false);

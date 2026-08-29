@@ -78,13 +78,15 @@
 
           <div class="dashboard__actions">
             @if (demande.statut !== 'EN_COURS') {
-              <button type="button" (click)="confirmer(demande.code)">Confirmer</button>
+                <button type="button" (click)="confirmer(demande.code)">Confirmer</button>
             }
             @if (demande.statut !== 'EN_ATTENTE') {
-              <button type="button" (click)="mettreEnAttente(demande.code)">Mettre en attente</button>
+                <button type="button" (click)="mettreEnAttente(demande.code)">Mettre en attente</button>
             }
             <button type="button" (click)="ouvrirProgrammation(demande.code)">Proposer un horaire</button>
-          </div>
+            <a [routerLink]="['/ecoutant/conversations', demande.code]" class="dashboard__rejoindre">Discuter</a>
+            </div>
+
 
           @if (codeEnProgrammation() === demande.code) {
             <div class="dashboard__programmation">

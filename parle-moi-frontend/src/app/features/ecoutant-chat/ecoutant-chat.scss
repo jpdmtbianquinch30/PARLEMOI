@@ -1,0 +1,133 @@
+.ecoutant-chat {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1rem;
+
+  &__retour {
+    display: inline-block;
+    margin: 1rem;
+    color: var(--color-teal);
+    font-weight: 600;
+  }
+
+  &__entete {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background: var(--color-voile);
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+  }
+
+  &__banniere {
+    background: var(--color-or);
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+    cursor: pointer;
+
+    &--erreur { background: var(--color-corail); color: white; }
+  }
+
+  &__messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-height: 300px;
+    margin-bottom: 1rem;
+  }
+
+  &__bulle {
+    background: white;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
+    max-width: 70%;
+    box-shadow: 0 2px 8px rgba(26, 27, 46, 0.06);
+
+    span { font-size: 0.7rem; color: var(--color-encre-muted); }
+
+    &--moi {
+      align-self: flex-end;
+      background: var(--color-teal);
+      color: white;
+
+      span { color: rgba(255, 255, 255, 0.7); }
+    }
+  }
+
+  &__saisie {
+    display: flex;
+    gap: 0.5rem;
+
+    input {
+      flex: 1;
+      padding: 0.7rem 1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(35, 35, 56, 0.15);
+    }
+
+    button {
+      padding: 0.7rem 1.4rem;
+      border-radius: 999px;
+      background: var(--color-corail);
+      color: white;
+      font-weight: 600;
+    }
+  }
+}
+
+.appel-bandeau {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.2rem;
+  background: var(--color-voile);
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+
+  &--actif { background: rgba(47, 111, 99, 0.1); }
+  &--entrant { background: rgba(232, 185, 95, 0.15); }
+
+  &__actions { display: flex; gap: 0.5rem; }
+}
+
+.btn-appel {
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: var(--color-teal);
+  color: white;
+
+  &--raccrocher { background: var(--color-corail); }
+  &--accepter { background: var(--color-teal); }
+}
+
+.appel-confirmation {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 27, 46, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+
+  p {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    margin: 0;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  &__actions {
+    display: flex;
+    background: white;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+
+    button { flex: 1; padding: 1rem; font-weight: 600; }
+  }
+
+  &__confirmer { color: var(--color-corail); }
+}
