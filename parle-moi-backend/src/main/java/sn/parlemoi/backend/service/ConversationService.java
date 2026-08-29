@@ -17,6 +17,7 @@ import sn.parlemoi.backend.dto.message.HistoriqueConversationResponse;
 import sn.parlemoi.backend.dto.message.MessageResponse;
 import sn.parlemoi.backend.entity.Message;
 import sn.parlemoi.backend.repository.MessageRepository;
+import sn.parlemoi.backend.dto.appel.TurnCredentialsResponse;
 
 import java.util.List;
 import java.time.LocalDateTime;
@@ -32,20 +33,24 @@ public class ConversationService {
     private final UtilisateurRepository utilisateurRepository;
     private final CodeGeneratorService codeGeneratorService;
     private final MessageRepository messageRepository;
+    private final TurnCredentialsService turnCredentialsService;
 
     public ConversationService(
             ConversationRepository conversationRepository,
             EcoutantRepository ecoutantRepository,
             UtilisateurRepository utilisateurRepository,
             CodeGeneratorService codeGeneratorService,
-            MessageRepository messageRepository
+            MessageRepository messageRepository,
+            TurnCredentialsService turnCredentialsService
     ) {
         this.conversationRepository = conversationRepository;
         this.ecoutantRepository = ecoutantRepository;
         this.utilisateurRepository = utilisateurRepository;
         this.codeGeneratorService = codeGeneratorService;
         this.messageRepository = messageRepository;
+        this.turnCredentialsService = turnCredentialsService;
     }
+
 
     @Transactional
     public ConversationResponse demarrer(DemarrerConversationRequest request) {
@@ -83,6 +88,18 @@ public class ConversationService {
 
         Conversation sauvegardee = conversationRepository.save(conversation);
         return versReponse(sauvegardee);
+    }
+
+    @Transactional
+    public TurnCredentialsResponse emettreCredentialsTurn(String code) {
+        Conversation conversation = conversationRepository.findByCode(code)
+                .orElseThrow(() -> new RessourceNonTrouveeException("Conversation introuvable"));
+
+        if (conversation.getExpireLe() != null && conversation.getExpireLe().isBefore(LocalDateTime.now())) {
+            throw new RessourceNonTrouveeException("Cette conversation a expire");
+        }
+
+        return turnCredentialsService.genererPour(code);
     }
 
     @Transactional

@@ -22,6 +22,12 @@ export interface EvenementForfaitActive {
   forfaitExpireLe: string;
 }
 
+export interface EvenementAppel {
+  type: string;
+  contenu: string | null;
+  emetteur: 'UTILISATEUR' | 'ECOUTANT';
+}
+
 export type EvenementChat =
   | { categorie: 'message'; donnees: MessageApi }
   | { categorie: 'systeme'; donnees: EvenementSysteme }
@@ -101,4 +107,24 @@ export class ChatSocketService {
 
     onEvenement({ categorie: 'systeme', donnees: donnees as EvenementSysteme });
   }
+  envoyerSignalAppel(code: string, type: string, contenu: string | null): void {
+  const client = (this as any).client as Client | null;
+  if (!client || !client.connected) {
+    return;
+  }
+  client.publish({
+    destination: `/app/conversations/${code}/appel/signal`,
+    body: JSON.stringify({ type, contenu })
+  });
+}
+
+ecouterAppel(code: string, onEvenement: (evenement: EvenementAppel) => void): void {
+  const client = (this as any).client as Client | null;
+  if (!client || !client.connected) {
+    return;
+  }
+  client.subscribe(`/topic/conversations/${code}/appel`, (frame) => {
+    onEvenement(JSON.parse(frame.body) as EvenementAppel);
+  });
+}
 }

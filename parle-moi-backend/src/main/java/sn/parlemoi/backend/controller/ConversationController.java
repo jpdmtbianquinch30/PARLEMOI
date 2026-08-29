@@ -8,6 +8,7 @@ import sn.parlemoi.backend.dto.conversation.ConversationResponse;
 import sn.parlemoi.backend.dto.conversation.DemarrerConversationRequest;
 import sn.parlemoi.backend.service.ConversationService;
 import sn.parlemoi.backend.dto.message.HistoriqueConversationResponse;
+import sn.parlemoi.backend.dto.appel.TurnCredentialsResponse;
 
 @RestController
 @RequestMapping("/api/conversations")
@@ -26,6 +27,10 @@ public class ConversationController {
         DemarrerConversationRequest corps = request != null ? request : new DemarrerConversationRequest(null);
         ConversationResponse reponse = conversationService.demarrer(corps);
         return ResponseEntity.status(HttpStatus.CREATED).body(reponse);
+    }
+    @GetMapping("/{code}/turn-credentials")
+    public ResponseEntity<TurnCredentialsResponse> turnCredentials(@PathVariable String code) {
+        return ResponseEntity.ok(conversationService.emettreCredentialsTurn(code));
     }
 
     @GetMapping("/{code}")
