@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ServiceRepository extends JpaRepository<Service, String> {
     List<sn.parlemoi.backend.entity.Service> findByActifTrueOrderByOrdreAffichageAsc();
+    List<sn.parlemoi.backend.entity.Service> findAllByOrderByOrdreAffichageAsc();
 }

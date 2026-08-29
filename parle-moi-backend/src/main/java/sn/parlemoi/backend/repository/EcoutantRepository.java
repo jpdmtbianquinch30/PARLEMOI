@@ -5,10 +5,15 @@ import sn.parlemoi.backend.entity.Ecoutant;
 import sn.parlemoi.backend.enums.RoleEcoutant;
 
 import java.util.Optional;
+import java.util.List;
 
 public interface EcoutantRepository extends JpaRepository<Ecoutant, String> {
+
+    List<Ecoutant> findByRoleOrderByCreeLeAsc(RoleEcoutant role);
+
+    boolean existsByEmailAndIdNot(String email, String id);
+
     Optional<Ecoutant> findByEmail(String email);
 
-    // V1 : une seule ecoutante active - on prend la plus ancienne creee pour un comportement deterministe
-    Optional<Ecoutant> findFirstByRoleOrderByCreeLeAsc(RoleEcoutant role);
+    Optional<Ecoutant> findFirstByRoleAndActifTrueOrderByCreeLeAsc(RoleEcoutant role);
 }

@@ -39,6 +39,10 @@ public class Ecoutant {
     @Builder.Default
     private RoleEcoutant role = RoleEcoutant.ECOUTANT;
 
+    @Column(name = "actif", nullable = false)
+    @Builder.Default
+    private boolean actif = true;
+
     @Column(name = "en_ligne", nullable = false)
     @Builder.Default
     private boolean enLigne = false;

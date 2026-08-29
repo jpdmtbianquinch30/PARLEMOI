@@ -50,7 +50,7 @@ public class ConversationService {
     @Transactional
     public ConversationResponse demarrer(DemarrerConversationRequest request) {
 
-        Ecoutant ecoutant = ecoutantRepository.findFirstByRoleOrderByCreeLeAsc(RoleEcoutant.ECOUTANT)
+        Ecoutant ecoutant = ecoutantRepository.findFirstByRoleAndActifTrueOrderByCreeLeAsc(RoleEcoutant.ECOUTANT)
                 .orElseThrow(() -> new RessourceNonTrouveeException("Aucune ecoutante n'est configuree pour le moment"));
 
         Utilisateur utilisateur = utilisateurRepository.save(Utilisateur.builder().build());

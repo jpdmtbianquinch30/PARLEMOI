@@ -1,0 +1,153 @@
+<div class="admin-dashboard">
+  <div class="admin-dashboard__header">
+    <h1>Tableau de bord — Administration</h1>
+    <button class="btn btn--secondary" (click)="deconnecter()">Déconnexion</button>
+  </div>
+
+  <div class="admin-dashboard__onglets">
+    <button class="onglet" [class.onglet--actif]="onglet() === 'apercu'" (click)="changerOnglet('apercu')">Vue d'ensemble</button>
+    <button class="onglet" [class.onglet--actif]="onglet() === 'ecoutants'" (click)="changerOnglet('ecoutants')">Écoutant(e)s</button>
+    <button class="onglet" [class.onglet--actif]="onglet() === 'catalogue'" (click)="changerOnglet('catalogue')">Catalogue</button>
+  </div>
+
+  @switch (onglet()) {
+
+    @case ('apercu') {
+      @if (chargement()) {
+        <p class="admin-dashboard__etat">Chargement...</p>
+      } @else if (erreur()) {
+        <p class="admin-dashboard__etat admin-dashboard__etat--erreur">Impossible de charger les données.</p>
+      } @else {
+        @if (stats(); as s) {
+          <div class="admin-dashboard__stats">
+            <div class="stat-card"><span class="stat-card__valeur">{{ s.conversationsAujourdhui }}</span><span class="stat-card__label">Conversations aujourd'hui</span></div>
+            <div class="stat-card"><span class="stat-card__valeur">{{ s.conversationsSemaine }}</span><span class="stat-card__label">Cette semaine</span></div>
+            <div class="stat-card"><span class="stat-card__valeur">{{ s.conversationsEnAttente }}</span><span class="stat-card__label">En attente</span></div>
+            <div class="stat-card"><span class="stat-card__valeur">{{ s.conversationsTerminees }}</span><span class="stat-card__label">Terminées</span></div>
+            <div class="stat-card"><span class="stat-card__valeur">{{ s.ecoutantsEnLigne }}</span><span class="stat-card__label">Écoutant(e)s en ligne</span></div>
+            <div class="stat-card stat-card--highlight"><span class="stat-card__valeur">{{ s.revenuTotal | number:'1.0-0':'fr' }} XOF</span><span class="stat-card__label">{{ s.paiementsReussis }} paiement(s) réussi(s)</span></div>
+          </div>
+        }
+
+        <h2>Toutes les conversations</h2>
+        @if (conversations().length === 0) {
+          <p class="admin-dashboard__etat">Aucune conversation pour le moment.</p>
+        } @else {
+          <table class="admin-table">
+            <thead><tr><th>Code</th><th>Statut</th><th>Écoutant(e)</th><th>Formule</th><th>Forfait</th><th>Créée le</th></tr></thead>
+            <tbody>
+              @for (c of conversations(); track c.code) {
+                <tr>
+                  <td class="admin-table__code">{{ c.code }}</td>
+                  <td><span class="badge" [class]="'badge--' + c.statut.toLowerCase()">{{ c.statut }}</span></td>
+                  <td>{{ c.ecoutantNom }}</td>
+                  <td>{{ c.formuleNom || '—' }}</td>
+                  <td>{{ c.forfaitActif ? 'Actif' : 'Inactif' }}</td>
+                  <td>{{ c.creeLe | date:'dd/MM/yyyy HH:mm' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      }
+    }
+
+    @case ('ecoutants') {
+      <div class="admin-dashboard__section-header">
+        <h2>Gestion des écoutant(e)s</h2>
+        @if (!afficherFormulaireCreation()) {
+          <button class="btn btn--primary" (click)="ouvrirFormulaireCreation()">+ Nouvelle écoutante</button>
+        }
+      </div>
+
+      @if (afficherFormulaireCreation()) {
+        <div class="form-creation">
+          <div class="form-creation__champ"><label>Nom</label><input type="text" [(ngModel)]="nouveauNom" placeholder="Ex: Fatou Diop"></div>
+          <div class="form-creation__champ"><label>Email</label><input type="email" [(ngModel)]="nouvelEmail" placeholder="ecoutante@parlemoi.sn"></div>
+          <div class="form-creation__champ"><label>Mot de passe temporaire</label><input type="password" [(ngModel)]="nouveauMotDePasse" placeholder="8 caractères minimum"></div>
+          @if (erreurCreation()) { <p class="admin-dashboard__etat admin-dashboard__etat--erreur">{{ erreurCreation() }}</p> }
+          <div class="form-creation__actions">
+            <button class="btn btn--secondary" (click)="annulerCreation()">Annuler</button>
+            <button class="btn btn--primary" [disabled]="creationEnCours()" (click)="creerEcoutant()">{{ creationEnCours() ? 'Création...' : 'Créer' }}</button>
+          </div>
+        </div>
+      }
+
+      <table class="admin-table">
+        <thead><tr><th>Nom</th><th>Email</th><th>Statut</th><th>En ligne</th><th>Rétention</th><th></th></tr></thead>
+        <tbody>
+          @for (e of ecoutants(); track e.id) {
+            <tr>
+              <td>{{ e.nom }}</td>
+              <td>{{ e.email }}</td>
+              <td><span class="badge" [class]="e.actif ? 'badge--en_cours' : 'badge--terminee'">{{ e.actif ? 'Actif' : 'Désactivé' }}</span></td>
+              <td>{{ e.enLigne ? 'Oui' : 'Non' }}</td>
+              <td>{{ e.dureeRetentionMessages }}</td>
+              <td><button class="btn btn--secondary btn--sm" (click)="basculerActif(e)">{{ e.actif ? 'Désactiver' : 'Réactiver' }}</button></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
+    @case ('catalogue') {
+      <h2>Catalogue — Services & Formules</h2>
+
+      @for (service of catalogue(); track service.id) {
+        <div class="catalogue-service">
+          <div class="admin-dashboard__section-header">
+            <h3>{{ service.nom }}</h3>
+            @if (afficherFormulaireFormule() !== service.id) {
+              <button class="btn btn--primary btn--sm" (click)="ouvrirFormulaireFormule(service.id)">+ Nouvelle formule</button>
+            }
+          </div>
+
+          @if (afficherFormulaireFormule() === service.id) {
+            <div class="form-creation">
+              <div class="form-creation__champ"><label>Nom</label><input type="text" [(ngModel)]="formuleNom" placeholder="Ex: Express"></div>
+              <div class="form-creation__champ"><label>Description</label><input type="text" [(ngModel)]="formuleDescription"></div>
+              <div class="form-creation__champ"><label>Durée (minutes)</label><input type="number" [(ngModel)]="formuleDuree"></div>
+              <div class="form-creation__champ"><label>Prix (XOF)</label><input type="number" [(ngModel)]="formulePrix"></div>
+              @if (erreurFormule()) { <p class="admin-dashboard__etat admin-dashboard__etat--erreur">{{ erreurFormule() }}</p> }
+              <div class="form-creation__actions">
+                <button class="btn btn--secondary" (click)="annulerFormule()">Annuler</button>
+                <button class="btn btn--primary" [disabled]="formuleCreationEnCours()" (click)="creerFormule()">{{ formuleCreationEnCours() ? 'Création...' : 'Créer' }}</button>
+              </div>
+            </div>
+          }
+
+          <table class="admin-table">
+            <thead><tr><th>Nom</th><th>Durée</th><th>Prix</th><th>Statut</th><th></th></tr></thead>
+            <tbody>
+              @for (formule of service.formules; track formule.id) {
+                @if (formuleEnEdition() === formule.id) {
+                  <tr>
+                    <td><input type="text" [(ngModel)]="formuleNom"></td>
+                    <td><input type="number" [(ngModel)]="formuleDuree" style="width:70px"> min</td>
+                    <td><input type="number" [(ngModel)]="formulePrix" style="width:90px"> {{ formule.devise }}</td>
+                    <td>{{ formule.actif ? 'Actif' : 'Inactif' }}</td>
+                    <td class="catalogue-actions">
+                      <button class="btn btn--primary btn--sm" (click)="enregistrerEdition(formule.actif)">Enregistrer</button>
+                      <button class="btn btn--secondary btn--sm" (click)="annulerEdition()">Annuler</button>
+                    </td>
+                  </tr>
+                } @else {
+                  <tr>
+                    <td>{{ formule.nom }}</td>
+                    <td>{{ formule.dureeMinutes }} min</td>
+                    <td>{{ formule.prix | number:'1.0-0':'fr' }} {{ formule.devise }}</td>
+                    <td><span class="badge" [class]="formule.actif ? 'badge--en_cours' : 'badge--terminee'">{{ formule.actif ? 'Actif' : 'Inactif' }}</span></td>
+                    <td class="catalogue-actions">
+                      <button class="btn btn--secondary btn--sm" (click)="ouvrirEdition(formule)">Modifier</button>
+                      <button class="btn btn--secondary btn--sm" (click)="enregistrerEdition(!formule.actif)">{{ formule.actif ? 'Désactiver' : 'Réactiver' }}</button>
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    }
+  }
+</div>

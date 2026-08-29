@@ -17,6 +17,12 @@ public interface ConversationRepository extends JpaRepository<Conversation, Stri
     Optional<Conversation> findByCode(String code);
     Optional<Conversation> findByCodeAndEcoutantId(String code, String ecoutantId);
 
+    List<Conversation> findAllByOrderByCreeLeDesc();
+
+    long countByStatut(StatutConversation statut);
+
+    long countByCreeLeAfter(LocalDateTime depuis);
+
     boolean existsByEcoutantIdAndStatut(String ecoutantId, StatutConversation statut);
 
     long countByEcoutantIdAndStatut(String ecoutantId, StatutConversation statut);
@@ -51,5 +57,6 @@ public interface ConversationRepository extends JpaRepository<Conversation, Stri
     List<Conversation> findByEcoutantIdAndStatutInOrderByCreeLeAsc(
             String ecoutantId, List<StatutConversation> statuts
     );
+
 
 }

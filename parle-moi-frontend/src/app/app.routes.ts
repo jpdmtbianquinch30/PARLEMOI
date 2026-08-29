@@ -12,6 +12,7 @@ import { CommentCaMarche } from './features/comment-ca-marche/comment-ca-marche'
 import { Faq } from './features/faq/faq';
 import { creerGuardRole } from './core/auth-guard';
 import { EcoutantDashboard } from './features/ecoutant-dashboard/ecoutant-dashboard';
+import { AdminDashboard } from './features/admin-dashboard/admin-dashboard';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -30,5 +31,6 @@ export const routes: Routes = [
 
   { path: 'ecoutant/login', component: Login, data: { role: 'ECOUTANT' } },
   { path: 'admin/login', component: Login, data: { role: 'ADMIN' } },
-  { path: 'ecoutant', component: EcoutantDashboard, canActivate: [creerGuardRole('ECOUTANT')] }
+  { path: 'ecoutant', component: EcoutantDashboard, canActivate: [creerGuardRole('ECOUTANT')] },
+    { path: 'admin', component: AdminDashboard, canActivate: [creerGuardRole('ADMIN')] }
 ];
