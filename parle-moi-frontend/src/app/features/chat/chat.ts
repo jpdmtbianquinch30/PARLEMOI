@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ConversationService, ConversationApi, MessageApi, PaiementApi } from '../../core/conversation';
 import { ChatSocketService, EvenementChat } from '../../core/chat-socket';
 import { CatalogueService, FormuleApi } from '../../core/catalogue';
+
 
 type EtatChat = 'chargement' | 'pret' | 'paywall' | 'erreur';
 
@@ -24,6 +25,14 @@ export class Chat implements OnInit, OnDestroy {
 
   code = signal<string>('');
   conversation = signal<ConversationApi | null>(null);
+  messagesGratuitsRestants = computed(() => {
+  const conv = this.conversation();
+    if (!conv || conv.forfaitActif) {
+      return null;
+    }
+    const nbEnvoyesParUtilisateur = this.messages().filter(m => m.auteurType === 'UTILISATEUR').length;
+    return Math.max(0, 5 - nbEnvoyesParUtilisateur);
+  });
   messages = signal<MessageApi[]>([]);
   champMessage = '';
   etat = signal<EtatChat>('chargement');

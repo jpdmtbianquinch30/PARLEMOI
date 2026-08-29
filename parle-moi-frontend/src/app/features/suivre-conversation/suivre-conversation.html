@@ -1,0 +1,20 @@
+<div class="suivre-conversation">
+  <h1>Retrouver ma conversation</h1>
+  <p>Entrez le code recu au demarrage de votre conversation pour la reprendre.</p>
+
+  <form (ngSubmit)="rechercher()">
+    <input
+      type="text"
+      [(ngModel)]="code"
+      name="code"
+      placeholder="PM-XXXXXXXX"
+      autocomplete="off" />
+    <button type="submit" [disabled]="recherche()">
+      {{ recherche() ? 'Recherche...' : 'Retrouver' }}
+    </button>
+  </form>
+
+  @if (erreur()) {
+    <p class="suivre-conversation__erreur">{{ erreur() }}</p>
+  }
+</div>

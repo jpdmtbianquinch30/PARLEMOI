@@ -16,6 +16,7 @@ export class Header {
   menuOuvert = signal(false);
   servicesOuvert = signal(false);
   formulesOuvert = signal(false);
+  suiviOuvert = signal(false);
 
   urlActuelle = toSignal(
     this.router.events.pipe(
@@ -27,6 +28,9 @@ export class Header {
 
   servicesActif = computed(() => this.urlActuelle().startsWith('/services'));
   formulesActif = computed(() => this.urlActuelle().startsWith('/formules'));
+  suiviActif = computed(() =>
+    this.urlActuelle().startsWith('/suivre-conversation') || this.urlActuelle().startsWith('/suivre')
+  );
 
   toggleMenu() {
     this.menuOuvert.update(v => !v);
@@ -35,16 +39,25 @@ export class Header {
   toggleServices() {
     this.servicesOuvert.update(v => !v);
     this.formulesOuvert.set(false);
+    this.suiviOuvert.set(false);
   }
 
   toggleFormules() {
     this.formulesOuvert.update(v => !v);
     this.servicesOuvert.set(false);
+    this.suiviOuvert.set(false);
+  }
+
+  toggleSuivi() {
+    this.suiviOuvert.update(v => !v);
+    this.servicesOuvert.set(false);
+    this.formulesOuvert.set(false);
   }
 
   fermerMenu() {
     this.menuOuvert.set(false);
     this.servicesOuvert.set(false);
     this.formulesOuvert.set(false);
+    this.suiviOuvert.set(false);
   }
 }

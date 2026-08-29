@@ -1,0 +1,101 @@
+@if (chargement()) {
+  <div class="dashboard-chargement">Chargement...</div>
+}
+
+@if (erreur()) {
+  <div class="dashboard-erreur">{{ erreur() }}</div>
+}
+
+@if (profil() && !chargement()) {
+  <div class="dashboard">
+    <header class="dashboard__entete">
+      <div>
+        <h1>Bonjour, {{ profil()?.nom }}</h1>
+        <button
+          type="button"
+          class="dashboard__statut"
+          [class.dashboard__statut--en-ligne]="profil()?.enLigne"
+          (click)="basculerStatutEnLigne()">
+          {{ profil()?.enLigne ? '🟢 En ligne' : '⚪ Hors ligne' }} - cliquer pour changer
+        </button>
+      </div>
+      <button type="button" class="dashboard__deconnexion" (click)="deconnecter()">Se déconnecter</button>
+    </header>
+
+    <section class="dashboard__parametres">
+      <div class="dashboard__parametre">
+        <label>Horaires de disponibilité</label>
+        <div class="dashboard__horaires">
+          <input type="time" [(ngModel)]="horaireDebutSaisi" />
+          <span>à</span>
+          <input type="time" [(ngModel)]="horaireFinSaisi" />
+          <button type="button" (click)="enregistrerHoraires()">Enregistrer</button>
+        </div>
+      </div>
+
+      <div class="dashboard__parametre">
+        <label>Conservation des messages</label>
+        <div class="dashboard__horaires">
+          <select [(ngModel)]="retentionSaisie">
+            <option value="H24">24 heures</option>
+            <option value="J7">7 jours</option>
+            <option value="J30">30 jours</option>
+          </select>
+          <button type="button" (click)="enregistrerRetention()">Enregistrer</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard__demandes">
+      <h2>Demandes ({{ demandes().length }})</h2>
+
+      @if (demandes().length === 0) {
+        <p class="dashboard__vide">Aucune demande pour le moment.</p>
+      }
+
+      @for (demande of demandes(); track demande.code) {
+        <div class="dashboard__carte">
+          <div class="dashboard__carte-entete">
+            <strong>{{ demande.code }}</strong>
+            <span class="dashboard__badge" [attr.data-statut]="demande.statut">{{ demande.statut }}</span>
+          </div>
+
+          @if (demande.sujetOptionnel) {
+            <p class="dashboard__sujet">{{ demande.sujetOptionnel }}</p>
+          }
+
+          @if (demande.positionFileAttente) {
+            <p>Position en file : {{ demande.positionFileAttente }}</p>
+          }
+
+          @if (demande.forfaitActif) {
+            <p>Forfait actif : {{ demande.formuleNom }} (jusqu'à {{ demande.forfaitExpireLe | date:'HH:mm' }})</p>
+          }
+
+          @if (demande.dateProgrammee) {
+            <p>Rendez-vous programmé : {{ demande.dateProgrammee }} à {{ demande.heureProgrammee }}</p>
+          }
+
+          <div class="dashboard__actions">
+            @if (demande.statut !== 'EN_COURS') {
+              <button type="button" (click)="confirmer(demande.code)">Confirmer</button>
+            }
+            @if (demande.statut !== 'EN_ATTENTE') {
+              <button type="button" (click)="mettreEnAttente(demande.code)">Mettre en attente</button>
+            }
+            <button type="button" (click)="ouvrirProgrammation(demande.code)">Proposer un horaire</button>
+          </div>
+
+          @if (codeEnProgrammation() === demande.code) {
+            <div class="dashboard__programmation">
+              <input type="date" [(ngModel)]="dateProposee" />
+              <input type="time" [(ngModel)]="heureProposee" />
+              <button type="button" (click)="validerProgrammation()">Valider</button>
+              <button type="button" (click)="annulerProgrammation()">Annuler</button>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </div>
+}

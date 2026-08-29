@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export type DureeRetention = 'H24' | 'J7' | 'J30';
 export type StatutConversation = 'EN_ATTENTE' | 'PROGRAMMEE' | 'EN_COURS' | 'TERMINEE' | 'ANNULEE' | 'EXPIREE';
 
 export interface ConversationApi {

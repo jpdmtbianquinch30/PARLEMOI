@@ -15,6 +15,7 @@ import java.util.Optional;
 
 public interface ConversationRepository extends JpaRepository<Conversation, String> {
     Optional<Conversation> findByCode(String code);
+    Optional<Conversation> findByCodeAndEcoutantId(String code, String ecoutantId);
 
     boolean existsByEcoutantIdAndStatut(String ecoutantId, StatutConversation statut);
 
@@ -22,17 +23,33 @@ public interface ConversationRepository extends JpaRepository<Conversation, Stri
 
     boolean existsByCodeAndEcoutantId(String code, String ecoutantId);
 
+
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select c from Conversation c where c.code = :code")
     Optional<Conversation> findByCodeForUpdate(@Param("code") String code);
 
-    // SCRUM-9 : forfaits dont l'expiration tombe dans les 5 prochaines minutes, pas encore avertis
     List<Conversation> findByForfaitExpireLeBetweenAndEtatNotificationForfait(
             LocalDateTime debut, LocalDateTime fin, EtatNotificationForfait etat
     );
 
-    // SCRUM-18 : forfaits deja expires, pas encore notifies comme tels
     List<Conversation> findByForfaitExpireLeBeforeAndEtatNotificationForfaitNot(
             LocalDateTime maintenant, EtatNotificationForfait etat
     );
+
+    // File d'attente : prochaine conversation a promouvoir en priorite (position la plus basse)
+    Optional<Conversation> findFirstByEcoutantIdAndStatutOrderByPositionFileAttenteAsc(
+            String ecoutantId, StatutConversation statut
+    );
+
+    // Utilise pour renumeroter la file apres une promotion ou un depart de la file
+    List<Conversation> findByEcoutantIdAndStatutOrderByPositionFileAttenteAsc(
+            String ecoutantId, StatutConversation statut
+    );
+
+    // Liste des demandes visibles par l'ecoutante (SCRUM-13, 19)
+    List<Conversation> findByEcoutantIdAndStatutInOrderByCreeLeAsc(
+            String ecoutantId, List<StatutConversation> statuts
+    );
+
 }

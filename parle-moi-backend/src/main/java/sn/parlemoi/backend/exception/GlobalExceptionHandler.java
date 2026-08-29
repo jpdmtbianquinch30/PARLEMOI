@@ -70,4 +70,16 @@ public class GlobalExceptionHandler {
         ErreurResponse erreur = ErreurResponse.de(401, "Non autorise", "Authentification invalide");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erreur);
     }
+
+    @ExceptionHandler(AccesRefuseException.class)
+    public ResponseEntity<ErreurResponse> gererAccesRefuse(AccesRefuseException ex) {
+        ErreurResponse erreur = ErreurResponse.de(403, "Acces refuse", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(erreur);
+    }
+
+    @ExceptionHandler(ConversationClotureeException.class)
+    public ResponseEntity<ErreurResponse> gererConversationCloturee(ConversationClotureeException ex) {
+        ErreurResponse erreur = ErreurResponse.de(409, "Conflit", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(erreur);
+    }
 }

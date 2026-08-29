@@ -26,8 +26,8 @@
           Forfait "{{ conversation()?.formuleNom }}" actif jusqu'a {{ conversation()?.forfaitExpireLe | date:'HH:mm' }}
         </div>
       } @else {
-        <div class="chat__gratuit">{{ conversation()?.nbMessagesGratuitsRestants }} message(s) gratuit(s) restant(s)</div>
-      }
+       <div class="chat__gratuit">{{ messagesGratuitsRestants() }} message(s) gratuit(s) restant(s)</div>
+    }
     </header>
 
     @if (banniere()) {

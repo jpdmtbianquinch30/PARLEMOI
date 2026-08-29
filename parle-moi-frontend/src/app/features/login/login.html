@@ -1,0 +1,23 @@
+<div class="login">
+  <h1>{{ titre }}</h1>
+
+  <form (ngSubmit)="connecter()">
+    <label>
+      Email
+      <input type="email" [(ngModel)]="email" name="email" autocomplete="username" required />
+    </label>
+
+    <label>
+      Mot de passe
+      <input type="password" [(ngModel)]="motDePasse" name="motDePasse" autocomplete="current-password" required />
+    </label>
+
+    <button type="submit" [disabled]="chargement()">
+      {{ chargement() ? 'Connexion...' : 'Se connecter' }}
+    </button>
+  </form>
+
+  @if (erreur()) {
+    <p class="login__erreur">{{ erreur() }}</p>
+  }
+</div>

@@ -70,11 +70,30 @@
       </div>
     </div>
 
-    <a routerLink="/confidentialite" routerLinkActive="header__link--actif" (click)="fermerMenu()">Confidentialité</a>
     <a routerLink="/comment-ca-marche" routerLinkActive="header__link--actif" (click)="fermerMenu()">Comment ça marche</a>
-    <a routerLink="/faq" routerLinkActive="header__link--actif" (click)="fermerMenu()">FAQ</a>
-    <a routerLink="/suivre" routerLinkActive="header__link--actif" (click)="fermerMenu()">Suivre ma demande</a>
-  </nav>
+<a routerLink="/faq" routerLinkActive="header__link--actif" (click)="fermerMenu()">FAQ</a>
 
-  <a routerLink="/reservation" class="header__cta">Prendre rendez-vous</a>
+<div class="header__dropdown">
+  <button
+    class="header__dropdown-trigger"
+    [class.header__link--actif]="suiviActif()"
+    (click)="toggleSuivi()">
+    Suivi
+    <span class="header__arrow" [class.header__arrow--open]="suiviOuvert()">▾</span>
+  </button>
+
+  <div class="header__submenu" [class.header__submenu--open]="suiviOuvert()">
+    <a routerLink="/suivre-conversation" routerLinkActive="header__sublink--actif" (click)="fermerMenu()" class="header__submenu-item">
+      <span class="header__submenu-titre">Ma conversation</span>
+      <span class="header__submenu-meta">Reprendre un chat avec votre code</span>
+    </a>
+    <a routerLink="/suivre" routerLinkActive="header__sublink--actif" (click)="fermerMenu()" class="header__submenu-item">
+      <span class="header__submenu-titre">Ma réservation</span>
+      <span class="header__submenu-meta">Suivre un appel programmé</span>
+    </a>
+  </div>
+</div>
+</nav>
+
+  <a routerLink="/chat" class="header__cta">Parler maintenant</a>
 </header>
