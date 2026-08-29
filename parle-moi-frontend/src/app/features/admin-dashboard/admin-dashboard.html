@@ -139,7 +139,7 @@
                     <td><span class="badge" [class]="formule.actif ? 'badge--en_cours' : 'badge--terminee'">{{ formule.actif ? 'Actif' : 'Inactif' }}</span></td>
                     <td class="catalogue-actions">
                       <button class="btn btn--secondary btn--sm" (click)="ouvrirEdition(formule)">Modifier</button>
-                      <button class="btn btn--secondary btn--sm" (click)="enregistrerEdition(!formule.actif)">{{ formule.actif ? 'Désactiver' : 'Réactiver' }}</button>
+                      <button class="btn btn--secondary btn--sm" (click)="basculerActifFormule(formule)">{{ formule.actif ? 'Désactiver' : 'Réactiver' }}</button>
                     </td>
                   </tr>
                 }

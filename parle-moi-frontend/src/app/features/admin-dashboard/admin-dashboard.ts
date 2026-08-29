@@ -171,6 +171,21 @@ export class AdminDashboard implements OnInit {
     });
   }
 
+  // Bascule actif/inactif SANS toucher aux autres champs - utilise les valeurs reelles
+  // de la formule cliquee, pas les champs de saisie partages avec le formulaire d'edition
+  // (qui peuvent contenir les valeurs d'une AUTRE formule en cours d'edition).
+  basculerActifFormule(formule: FormuleAdminApi): void {
+    this.adminService.modifierFormule(formule.id, {
+      nom: formule.nom,
+      description: formule.description ?? '',
+      dureeMinutes: formule.dureeMinutes,
+      prix: formule.prix,
+      actif: !formule.actif
+    }).subscribe({
+      next: () => this.chargerCatalogue()
+    });
+  }
+
   deconnecter(): void {
     this.authService.deconnecter();
     this.router.navigate(['/admin/login']);

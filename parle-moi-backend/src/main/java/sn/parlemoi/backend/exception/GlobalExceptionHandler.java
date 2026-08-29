@@ -82,4 +82,10 @@ public class GlobalExceptionHandler {
         ErreurResponse erreur = ErreurResponse.de(409, "Conflit", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(erreur);
     }
+
+    @ExceptionHandler(CompteDesactiveException.class)
+    public ResponseEntity<ErreurResponse> gererCompteDesactive(CompteDesactiveException ex) {
+        ErreurResponse erreur = ErreurResponse.de(403, "Compte desactive", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(erreur);
+    }
 }
