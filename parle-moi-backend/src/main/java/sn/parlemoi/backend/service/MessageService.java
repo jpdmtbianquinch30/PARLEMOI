@@ -10,17 +10,20 @@ import sn.parlemoi.backend.dto.message.EnvoyerMessageRequest;
 import sn.parlemoi.backend.dto.message.EvenementSystemeResponse;
 import sn.parlemoi.backend.dto.message.MessageResponse;
 import sn.parlemoi.backend.entity.Conversation;
+import sn.parlemoi.backend.entity.Fichier;
 import sn.parlemoi.backend.entity.Message;
 import sn.parlemoi.backend.enums.DureeRetention;
 import sn.parlemoi.backend.enums.StatutConversation;
 import sn.parlemoi.backend.exception.RessourceNonTrouveeException;
 import sn.parlemoi.backend.repository.ConversationRepository;
+import sn.parlemoi.backend.repository.FichierRepository;
 import sn.parlemoi.backend.repository.MessageRepository;
 import sn.parlemoi.backend.security.AnonymePrincipal;
 
 import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -32,18 +35,23 @@ public class MessageService {
 
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
+    private final FichierRepository fichierRepository;
+    private final FichierService fichierService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    // Anti-flood par conversation - independant du rate limiting HTTP (protocole different)
     private final ConcurrentMap<String, Bucket> antiFloodParConversation = new ConcurrentHashMap<>();
 
     public MessageService(
             ConversationRepository conversationRepository,
             MessageRepository messageRepository,
+            FichierRepository fichierRepository,
+            FichierService fichierService,
             SimpMessagingTemplate messagingTemplate
     ) {
         this.conversationRepository = conversationRepository;
         this.messageRepository = messageRepository;
+        this.fichierRepository = fichierRepository;
+        this.fichierService = fichierService;
         this.messagingTemplate = messagingTemplate;
     }
 
@@ -55,16 +63,6 @@ public class MessageService {
             return;
         }
 
-        String contenu = nettoyer(request.contenu());
-        if (contenu.isEmpty()) {
-            return;
-        }
-        if (contenu.length() > LONGUEUR_MESSAGE_MAX) {
-            envoyerEvenementSysteme(code, "ERREUR", "Message trop long (4000 caracteres maximum).", null);
-            return;
-        }
-
-        // Verrou pessimiste - garantit l'exactitude du compteur meme en cas d'envois simultanes
         Conversation conversation = conversationRepository.findByCodeForUpdate(code)
                 .orElseThrow(() -> new RessourceNonTrouveeException("Conversation introuvable"));
 
@@ -72,6 +70,28 @@ public class MessageService {
                 || conversation.getStatut() == StatutConversation.ANNULEE
                 || conversation.getStatut() == StatutConversation.EXPIREE) {
             envoyerEvenementSysteme(code, "ERREUR", "Cette conversation est cloturee.", null);
+            return;
+        }
+
+        // Un fichier joint est optionnel - doit obligatoirement appartenir a CETTE conversation,
+        // jamais faire confiance a un fichierId venu du client sans revalider son appartenance
+        // (sinon un utilisateur pourrait rattacher a sa conversation un fichier uploade ailleurs).
+        Fichier fichierJoint = null;
+        if (request.fichierId() != null && !request.fichierId().isBlank()) {
+            fichierJoint = fichierRepository.findByIdAndConversationId(request.fichierId(), conversation.getId())
+                    .orElse(null);
+            if (fichierJoint == null) {
+                envoyerEvenementSysteme(code, "ERREUR", "Fichier introuvable pour cette conversation.", null);
+                return;
+            }
+        }
+
+        String contenu = nettoyer(request.contenu());
+        if (contenu.isEmpty() && fichierJoint == null) {
+            return;
+        }
+        if (contenu.length() > LONGUEUR_MESSAGE_MAX) {
+            envoyerEvenementSysteme(code, "ERREUR", "Message trop long (4000 caracteres maximum).", null);
             return;
         }
 
@@ -96,7 +116,12 @@ public class MessageService {
                 .contenu(contenu)
                 .expireLe(calculerExpiration(conversation))
                 .build();
-        messageRepository.save(message);
+        Message messageSauvegarde = messageRepository.save(message);
+
+        if (fichierJoint != null) {
+            fichierJoint.setMessage(messageSauvegarde);
+            fichierRepository.save(fichierJoint);
+        }
 
         if (estUtilisateur && !forfaitActif) {
             conversation.setNbMessagesGratuitsUtilises(conversation.getNbMessagesGratuitsUtilises() + 1);
@@ -112,7 +137,7 @@ public class MessageService {
             }
         }
 
-        messagingTemplate.convertAndSend("/topic/conversations/" + code, versReponse(message));
+        messagingTemplate.convertAndSend("/topic/conversations/" + code, versReponse(messageSauvegarde));
     }
 
     private Bucket antiFlood(String code) {
@@ -126,9 +151,6 @@ public class MessageService {
         if (contenuBrut == null) {
             return "";
         }
-        // Retire les caracteres de controle (sauf saut de ligne/tabulation) - defense en profondeur
-        // cote stockage uniquement. LA vraie protection anti-XSS est cote FRONTEND :
-        // interpolation texte Angular ({{ }}), JAMAIS [innerHTML] pour afficher le contenu d'un message.
         String nettoye = contenuBrut.replaceAll("[\\p{Cntrl}&&[^\n\r\t]]", "");
         return nettoye.trim();
     }
@@ -150,12 +172,18 @@ public class MessageService {
         );
     }
 
-    private MessageResponse versReponse(Message message) {
+    public MessageResponse versReponse(Message message) {
+        Optional<Fichier> fichier = fichierRepository.findByMessageId(message.getId());
+
         return new MessageResponse(
                 message.getId(),
                 message.getAuteurType(),
                 message.getContenu(),
-                message.getEnvoyeLe()
+                message.getEnvoyeLe(),
+                fichier.map(Fichier::getId).orElse(null),
+                fichier.map(Fichier::getNomOriginal).orElse(null),
+                fichier.map(Fichier::getTypeMime).orElse(null),
+                fichier.map(f -> fichierService.urlSigneePour(f.getCleObjet())).orElse(null)
         );
     }
 }

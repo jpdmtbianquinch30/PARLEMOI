@@ -88,4 +88,10 @@ public class GlobalExceptionHandler {
         ErreurResponse erreur = ErreurResponse.de(403, "Compte desactive", ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(erreur);
     }
+
+    @ExceptionHandler(FichierInvalideException.class)
+    public ResponseEntity<ErreurResponse> gererFichierInvalide(FichierInvalideException ex) {
+        ErreurResponse erreur = ErreurResponse.de(400, "Fichier invalide", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erreur);
+    }
 }

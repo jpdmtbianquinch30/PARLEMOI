@@ -6,5 +6,9 @@ public record MessageResponse(
         String id,
         String auteurType,
         String contenu,
-        LocalDateTime envoyeLe
+        LocalDateTime envoyeLe,
+        String fichierId,
+        String fichierNomOriginal,
+        String fichierTypeMime,
+        String fichierUrlTelechargement
 ) {}

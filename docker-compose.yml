@@ -35,5 +35,25 @@ services:
       - "3478:3478/tcp"
       - "49160-49200:49160-49200/udp"
 
+  minio:
+    image: minio/minio:latest
+    container_name: parlemoi-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-parlemoi_minio_admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-dev-only-minio-secret-change-before-prod}
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - parlemoi_minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 volumes:
   parlemoi_pgdata:
+  parlemoi_minio_data:

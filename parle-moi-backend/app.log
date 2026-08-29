@@ -1,0 +1,40 @@
+2026-08-29T22:14:17.870Z  INFO 14128 --- [parle-moi-backend] [main] s.p.backend.ParleMoiBackendApplication   : Starting ParleMoiBackendApplication using Java 17.0.17 with PID 14128 (C:\Users\jeanp\Dev\Projects\java\PARLEMOI\parle-moi-backend\target\classes started by jeanp in C:\Users\jeanp\Dev\Projects\java\PARLEMOI\parle-moi-backend)
+2026-08-29T22:14:17.883Z  INFO 14128 --- [parle-moi-backend] [main] s.p.backend.ParleMoiBackendApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-08-29T22:14:19.660Z  INFO 14128 --- [parle-moi-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-08-29T22:14:19.941Z  INFO 14128 --- [parle-moi-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 248 ms. Found 10 JPA repository interfaces.
+2026-08-29T22:14:21.306Z  INFO 14128 --- [parle-moi-backend] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-08-29T22:14:21.336Z  INFO 14128 --- [parle-moi-backend] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-08-29T22:14:21.337Z  INFO 14128 --- [parle-moi-backend] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-29T22:14:21.512Z  INFO 14128 --- [parle-moi-backend] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 3459 ms
+2026-08-29T22:14:22.221Z  INFO 14128 --- [parle-moi-backend] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-08-29T22:14:22.569Z  INFO 14128 --- [parle-moi-backend] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4b4a2fa8
+2026-08-29T22:14:22.571Z  INFO 14128 --- [parle-moi-backend] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-08-29T22:14:22.611Z  INFO 14128 --- [parle-moi-backend] [main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5432/parlemoi (PostgreSQL 16.14)
+2026-08-29T22:14:22.733Z  INFO 14128 --- [parle-moi-backend] [main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.052s)
+2026-08-29T22:14:22.771Z  INFO 14128 --- [parle-moi-backend] [main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 5
+2026-08-29T22:14:22.777Z  INFO 14128 --- [parle-moi-backend] [main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-08-29T22:14:23.004Z  INFO 14128 --- [parle-moi-backend] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-08-29T22:14:23.158Z  INFO 14128 --- [parle-moi-backend] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-08-29T22:14:24.054Z  INFO 14128 --- [parle-moi-backend] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-08-29T22:14:24.185Z  INFO 14128 --- [parle-moi-backend] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/parlemoi]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 16.14
+	Default catalog/schema: parlemoi/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-08-29T22:14:26.718Z  INFO 14128 --- [parle-moi-backend] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-08-29T22:14:26.801Z  INFO 14128 --- [parle-moi-backend] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-08-29T22:14:26.943Z  INFO 14128 --- [parle-moi-backend] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-08-29T22:14:29.776Z  INFO 14128 --- [parle-moi-backend] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsService
+2026-08-29T22:14:31.121Z  INFO 14128 --- [parle-moi-backend] [main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-08-29T22:14:31.122Z  INFO 14128 --- [parle-moi-backend] [main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@d86a616]]
+2026-08-29T22:14:31.124Z  INFO 14128 --- [parle-moi-backend] [main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-08-29T22:14:31.180Z  INFO 14128 --- [parle-moi-backend] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-08-29T22:14:31.204Z  INFO 14128 --- [parle-moi-backend] [main] s.p.backend.ParleMoiBackendApplication   : Started ParleMoiBackendApplication in 14.577 seconds (process running for 15.513)
+2026-08-29T22:15:31.125Z  INFO 14128 --- [parle-moi-backend] [MessageBroker-1] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 4, active threads = 1, queued tasks = 1, completed tasks = 2]

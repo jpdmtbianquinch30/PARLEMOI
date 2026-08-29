@@ -19,6 +19,7 @@ import sn.parlemoi.backend.entity.Message;
 import sn.parlemoi.backend.repository.MessageRepository;
 import sn.parlemoi.backend.dto.appel.TurnCredentialsResponse;
 
+
 import java.util.List;
 import java.time.LocalDateTime;
 
@@ -34,6 +35,7 @@ public class ConversationService {
     private final CodeGeneratorService codeGeneratorService;
     private final MessageRepository messageRepository;
     private final TurnCredentialsService turnCredentialsService;
+    private final MessageService messageService;
 
     public ConversationService(
             ConversationRepository conversationRepository,
@@ -116,7 +118,7 @@ public class ConversationService {
         );
 
         List<MessageResponse> messagesReponse = messages.stream()
-                .map(m -> new MessageResponse(m.getId(), m.getAuteurType(), m.getContenu(), m.getEnvoyeLe()))
+                .map(messageService::versReponse)
                 .toList();
 
         return new HistoriqueConversationResponse(versReponse(conversation), messagesReponse);
