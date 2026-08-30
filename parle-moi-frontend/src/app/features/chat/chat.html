@@ -13,28 +13,71 @@
   <div class="chat">
     <header class="chat__entete">
       <div class="chat__code">
-        <span class="chat__code-label">Code :</span>
+        <span class="chat__code-label">Code</span>
         <strong class="chat__code-valeur">{{ code() }}</strong>
-        <span class="chat__code-note">(a conserver pour retrouver cette conversation pendant 1 mois)</span>
+        <span class="chat__code-note">a conserver pour retrouver cette conversation pendant 1 mois</span>
       </div>
 
-      <div class="chat__statuts">
-        @if (conversation()?.statut === 'EN_ATTENTE') {
-          <span class="chat__badge chat__badge--attente">En file d'attente - position {{ conversation()?.positionFileAttente }}</span>
-        }
-
-        @if (conversation()?.forfaitActif) {
-          <span class="chat__badge chat__badge--actif">
-            Forfait "{{ conversation()?.formuleNom }}" actif jusqu'a {{ conversation()?.forfaitExpireLe | date:'HH:mm' }}
-          </span>
-        } @else {
-         <span class="chat__badge chat__badge--gratuit">{{ messagesGratuitsRestants() }} message(s) gratuit(s) restant(s)</span>
-        }
-      </div>
+      @if (conversation()?.statut === 'EN_ATTENTE') {
+        <span class="chat__badge chat__badge--attente">En file d'attente · position {{ conversation()?.positionFileAttente }}</span>
+      }
     </header>
+
+    @if (webrtcCall.erreur()) {
+      <div class="chat__banniere chat__banniere--erreur" (click)="webrtcCall.erreur.set(null)">
+        {{ webrtcCall.erreur() }}
+      </div>
+    }
+
+    @switch (webrtcCall.etat()) {
+      @case ('INACTIF') {
+        @if (peutAppeler()) {
+          <div class="appel-bandeau">
+            <button type="button" class="btn-appel" [disabled]="appelEnCoursDeDemarrage()" (click)="demarrerAppel()">
+              📞 {{ appelEnCoursDeDemarrage() ? 'Preparation...' : "Appeler l'ecoutant(e)" }}
+            </button>
+          </div>
+        }
+      }
+      @case ('SONNERIE_SORTANTE') {
+        <div class="appel-bandeau appel-bandeau--actif">
+          <span>Appel en cours... en attente de reponse</span>
+          <button type="button" class="btn-appel btn-appel--raccrocher" (click)="demanderRaccrochage()">Annuler</button>
+        </div>
+      }
+      @case ('SONNERIE_ENTRANTE') {
+        <div class="appel-bandeau appel-bandeau--entrant">
+          <span>📞 Appel entrant de l'ecoutant(e)</span>
+          <div class="appel-bandeau__actions">
+            <button type="button" class="btn-appel btn-appel--accepter" (click)="accepterAppel()">Accepter</button>
+            <button type="button" class="btn-appel btn-appel--raccrocher" (click)="refuserAppel()">Refuser</button>
+          </div>
+        </div>
+      }
+      @case ('EN_COURS') {
+        <div class="appel-bandeau appel-bandeau--actif">
+          <span>🔊 Appel en cours · {{ formaterDuree(webrtcCall.dureeSecondes()) }}</span>
+          <button type="button" class="btn-appel btn-appel--raccrocher" (click)="demanderRaccrochage()">Raccrocher</button>
+        </div>
+      }
+    }
+
+    @if (confirmationRaccrochage()) {
+      <div class="appel-confirmation">
+        <p>Voulez-vous vraiment mettre fin a l'appel ?</p>
+        <div class="appel-confirmation__actions">
+          <button type="button" (click)="annulerRaccrochage()">Continuer l'appel</button>
+          <button type="button" class="appel-confirmation__confirmer" (click)="confirmerRaccrochage()">Oui, raccrocher</button>
+        </div>
+      </div>
+    }
 
     @if (banniere()) {
       <div class="chat__banniere" (click)="fermerBanniere()">{{ banniere() }}</div>
+    }
+
+    @if (erreurFichier()) {
+      <div class="chat__banniere chat__banniere--erreur" (click)="erreurFichier.set(null)">{{ erreurFichier() }}</div>
     }
 
     <div class="chat__messages">
@@ -43,15 +86,56 @@
           class="chat__bulle"
           [class.chat__bulle--utilisateur]="message.auteurType === 'UTILISATEUR'"
           [class.chat__bulle--ecoutant]="message.auteurType === 'ECOUTANT'">
-          <p>{{ message.contenu }}</p>
+
+          @if (message.fichierUrlTelechargement) {
+            @if (estImage(message.fichierTypeMime)) {
+              <button type="button" class="chat__fichier-image-bouton" (click)="agrandirImage(message.fichierUrlTelechargement!, message.fichierNomOriginal)">
+                <img [src]="message.fichierUrlTelechargement" [alt]="message.fichierNomOriginal" class="chat__fichier-image" />
+              </button>
+            } @else if (estVideo(message.fichierTypeMime)) {
+              <video [src]="message.fichierUrlTelechargement" controls class="chat__fichier-video"></video>
+            } @else {
+              <a [href]="message.fichierUrlTelechargement" target="_blank" rel="noopener" class="chat__fichier-document">
+                📎 {{ message.fichierNomOriginal }}
+              </a>
+            }
+          }
+
+          @if (message.contenu) {
+            <p>{{ message.contenu }}</p>
+          }
           <span class="chat__heure">{{ message.envoyeLe | date:'HH:mm' }}</span>
         </div>
       }
     </div>
 
-    @if (etat() === 'paywall') {
+    <!-- Zone de statut du forfait - toujours visible juste au-dessus de la saisie -->
+    <div class="chat__statut-forfait">
+      @if (conversation()?.forfaitActif) {
+        <div class="statut-forfait statut-forfait--actif">
+          <span class="statut-forfait__pouls"></span>
+          <span>Forfait <strong>{{ conversation()?.formuleNom }}</strong> actif jusqu'a {{ conversation()?.forfaitExpireLe | date:'HH:mm' }}</span>
+        </div>
+      } @else {
+        <button type="button" class="statut-forfait statut-forfait--invite" (click)="toggleForfaitPanneau()">
+          <span>{{ messagesGratuitsRestants() }} message(s) gratuit(s) restant(s)</span>
+          <span class="statut-forfait__cta">✨ Activer un forfait</span>
+        </button>
+      }
+    </div>
+
+    @if ((panneauForfaitOuvert() && !conversation()?.forfaitActif) || etat() === 'paywall') {
       <div class="chat__paywall">
-        <p>Activez un forfait pour continuer la conversation.</p>
+        @if (etat() === 'paywall') {
+          <p class="chat__paywall-titre">Activez un forfait pour continuer la conversation</p>
+        } @else {
+          <div class="chat__paywall-entete">
+            <p class="chat__paywall-titre">Choisissez un forfait</p>
+            <button type="button" class="chat__paywall-fermer" (click)="toggleForfaitPanneau()">✕</button>
+          </div>
+        }
+
+        <p class="chat__paywall-note">📞 Les appels vocaux seront disponibles des l'activation d'un forfait.</p>
 
         <div class="chat__formules">
           @for (formule of formules(); track formule.id) {
@@ -61,7 +145,7 @@
               [class.chat__formule--selectionnee]="formuleSelectionneeId() === formule.id"
               (click)="choisirFormule(formule.id)">
               <strong>{{ formule.nom }}</strong>
-              <span>{{ formule.prix }} {{ formule.devise }} - {{ formule.dureeMinutes }} min</span>
+              <span>{{ formule.prix }} {{ formule.devise }} · {{ formule.dureeMinutes }} min</span>
             </button>
           }
         </div>
@@ -75,21 +159,30 @@
 
         @if (paiementActif()) {
           <div class="chat__simulation">
-            <p>Paiement initie ({{ paiementActif()?.montant }} {{ paiementActif()?.devise }}) - mode simulation actif en developpement.</p>
+            <p>Paiement initie ({{ paiementActif()?.montant }} {{ paiementActif()?.devise }}) · mode simulation actif en developpement.</p>
             <button type="button" class="btn btn--primary" (click)="simulerConfirmationPaiement()">Simuler le paiement reussi</button>
           </div>
         }
       </div>
-    } @else {
-      <form class="chat__saisie" (ngSubmit)="envoyerMessage()">
-        <input
-          type="text"
-          [(ngModel)]="champMessage"
-          name="message"
-          placeholder="Ecrivez votre message..."
-          autocomplete="off" />
-        <button type="submit" class="btn btn--primary">Envoyer</button>
-      </form>
+    }
+
+    <form class="chat__saisie" (ngSubmit)="envoyerMessage()">
+      <label class="chat__joindre">
+        📎
+        <input type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,application/pdf" (change)="surSelectionFichier($event)" hidden [disabled]="fichierEnCours() || etat() === 'paywall'" />
+      </label>
+      <input
+        type="text"
+        [(ngModel)]="champMessage"
+        name="message"
+        placeholder="Ecrivez votre message..."
+        autocomplete="off"
+        [disabled]="etat() === 'paywall'" />
+      <button type="submit" class="btn btn--primary" [disabled]="etat() === 'paywall'">Envoyer</button>
+    </form>
+
+    @if (imageAgrandie()) {
+      <app-image-lightbox [url]="imageAgrandie()!.url" [nom]="imageAgrandie()!.nom" (fermer)="fermerImageAgrandie()" />
     }
   </div>
 }

@@ -34,7 +34,11 @@ export class EcoutantChat implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const code = this.route.snapshot.paramMap.get('code');
-    if (!code) return;
+    if (!code) {
+      this.chargement.set(false);
+      this.erreur.set('Aucun code de conversation fourni.');
+      return;
+    }
     this.code.set(code);
 
     this.conversationService.consulterHistorique(code).subscribe({
@@ -46,7 +50,7 @@ export class EcoutantChat implements OnInit, OnDestroy {
         this.chatSocket.connecter(
           code,
           (evenement) => this.gererEvenement(evenement),
-          (evenement) => this.webrtcCall.traiterEvenementAppel(code, evenement),
+          (evenement) => this.webrtcCall.traiterEvenementAppel(code, evenement, 'ECOUTANT'),
           this.authService.token() ?? undefined
         );
       },

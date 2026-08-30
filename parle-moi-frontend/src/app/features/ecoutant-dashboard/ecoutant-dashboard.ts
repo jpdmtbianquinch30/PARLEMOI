@@ -9,7 +9,7 @@ import { AuthService } from '../../core/auth';
 @Component({
   selector: 'app-ecoutant-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './ecoutant-dashboard.html',
   styleUrl: './ecoutant-dashboard.scss'
 })
@@ -120,6 +120,9 @@ export class EcoutantDashboard implements OnInit {
       }
     });
   }
+  ouvrirDiscussion(code: string): void {
+  this.router.navigate(['/ecoutant/conversations', code]);
+}
 
   deconnecter(): void {
     this.authService.deconnecter();

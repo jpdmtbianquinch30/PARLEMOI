@@ -77,13 +77,14 @@
           }
 
           <div class="dashboard__actions">
+            <button type="button" class="btn btn--primary" (click)="ouvrirDiscussion(demande.code)">💬 Discuter</button>
             @if (demande.statut !== 'EN_COURS') {
-              <button type="button" class="btn btn--primary" (click)="confirmer(demande.code)">Confirmer</button>
+              <button type="button" (click)="confirmer(demande.code)">Confirmer</button>
             }
             @if (demande.statut !== 'EN_ATTENTE') {
-              <button type="button" class="btn btn--secondary" (click)="mettreEnAttente(demande.code)">Mettre en attente</button>
+              <button type="button" (click)="mettreEnAttente(demande.code)">Mettre en attente</button>
             }
-            <button type="button" class="btn btn--secondary" (click)="ouvrirProgrammation(demande.code)">Proposer un horaire</button>
+            <button type="button" (click)="ouvrirProgrammation(demande.code)">Proposer un horaire</button>
           </div>
 
           @if (codeEnProgrammation() === demande.code) {

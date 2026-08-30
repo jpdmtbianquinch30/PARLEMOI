@@ -43,6 +43,7 @@ export class Chat implements OnInit, OnDestroy {
   formuleSelectionneeId = signal<string | null>(null);
   paiementActif = signal<PaiementApi | null>(null);
   paiementEnCours = signal(false);
+  panneauForfaitOuvert = signal(false);
 
   appelEnCoursDeDemarrage = signal(false);
   confirmationRaccrochage = signal(false);
@@ -87,7 +88,7 @@ export class Chat implements OnInit, OnDestroy {
         this.chatSocket.connecter(
           code,
           (evenement) => this.gererEvenement(evenement),
-          (evenement) => this.webrtcCall.traiterEvenementAppel(code, evenement)
+          (evenement) => this.webrtcCall.traiterEvenementAppel(code, evenement, 'UTILISATEUR')
         );
       },
       error: () => {
@@ -183,6 +184,10 @@ export class Chat implements OnInit, OnDestroy {
       }
     });
   }
+
+  toggleForfaitPanneau(): void {
+  this.panneauForfaitOuvert.update(v => !v);
+}
 
   accepterAppel(): void {
     this.conversationService.turnCredentials(this.code()).subscribe({

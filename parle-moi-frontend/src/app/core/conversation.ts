@@ -36,13 +36,6 @@ export interface TurnCredentialsApi {
   urls: string[];
 }
 
-export interface MessageApi {
-  id: string;
-  auteurType: 'UTILISATEUR' | 'ECOUTANT';
-  contenu: string;
-  envoyeLe: string;
-}
-
 export interface HistoriqueConversationApi {
   conversation: ConversationApi;
   messages: MessageApi[];

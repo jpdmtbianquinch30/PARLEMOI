@@ -156,7 +156,19 @@ export class WebrtcCallService {
 
     // Point d'entree unique pour dispatcher un evenement d'appel recu par WebSocket -
   // reutilise a l'identique cote utilisateur et cote ecoutante, jamais duplique.
-  traiterEvenementAppel(code: string, evenement: import('./chat-socket').EvenementAppel): void {
+  traiterEvenementAppel(
+    code: string,
+    evenement: import('./chat-socket').EvenementAppel,
+    monRole: 'UTILISATEUR' | 'ECOUTANT'
+  ): void {
+    // Le serveur diffuse a TOUS les participants du topic, y compris l'emetteur lui-meme.
+    // Sans ce filtre, l'appelant recoit son propre signal OFFRE en echo et se traite
+    // lui-meme comme recevant un appel entrant - d'ou "Accepter/Refuser" affiche
+    // par erreur des DEUX cotes simultanement.
+    if (evenement.emetteur === monRole) {
+      return;
+    }
+
     switch (evenement.type) {
       case 'OFFRE':
         this.recevoirSonnerieEntrante(code, evenement.contenu!);
