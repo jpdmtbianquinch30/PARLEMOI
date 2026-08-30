@@ -5,11 +5,12 @@
   <form (ngSubmit)="rechercher()">
     <input
       type="text"
+      class="reservation-code"
       [(ngModel)]="code"
       name="code"
       placeholder="PM-XXXXXXXX"
       autocomplete="off" />
-    <button type="submit" [disabled]="recherche()">
+    <button type="submit" class="btn btn--primary" [disabled]="recherche()">
       {{ recherche() ? 'Recherche...' : 'Retrouver' }}
     </button>
   </form>

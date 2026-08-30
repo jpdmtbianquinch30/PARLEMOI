@@ -98,7 +98,7 @@
 
   &--en_attente {
     background: rgba(232, 185, 95, 0.18);
-    color: #97701f;
+    color: var(--color-avertissement);
   }
 
   &--terminee {

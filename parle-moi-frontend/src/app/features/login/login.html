@@ -12,7 +12,7 @@
       <input type="password" [(ngModel)]="motDePasse" name="motDePasse" autocomplete="current-password" required />
     </label>
 
-    <button type="submit" [disabled]="chargement()">
+    <button type="submit" class="btn btn--primary" [disabled]="chargement()">
       {{ chargement() ? 'Connexion...' : 'Se connecter' }}
     </button>
   </form>

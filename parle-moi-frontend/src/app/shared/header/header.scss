@@ -143,6 +143,19 @@
       pointer-events: none;
       transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
 
+      // Comble le petit vide entre le bouton et le sous-menu : sans ca,
+      // le survol se coupe une fraction de seconde en descendant et le
+      // menu se referme avant d'atteindre les liens.
+      &::before {
+        content: '';
+        position: absolute;
+        top: calc(-1 * var(--space-xs));
+        left: 0;
+        right: 0;
+        height: var(--space-xs);
+        pointer-events: auto;
+      }
+
       &--mega {
         min-width: 380px;
       }

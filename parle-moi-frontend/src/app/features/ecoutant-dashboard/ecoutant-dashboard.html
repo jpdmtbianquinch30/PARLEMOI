@@ -19,7 +19,7 @@
           {{ profil()?.enLigne ? '🟢 En ligne' : '⚪ Hors ligne' }} - cliquer pour changer
         </button>
       </div>
-      <button type="button" class="dashboard__deconnexion" (click)="deconnecter()">Se déconnecter</button>
+      <button type="button" class="dashboard__deconnexion btn" (click)="deconnecter()">Se déconnecter</button>
     </header>
 
     <section class="dashboard__parametres">
@@ -29,7 +29,7 @@
           <input type="time" [(ngModel)]="horaireDebutSaisi" />
           <span>à</span>
           <input type="time" [(ngModel)]="horaireFinSaisi" />
-          <button type="button" (click)="enregistrerHoraires()">Enregistrer</button>
+          <button type="button" class="btn btn--secondary" (click)="enregistrerHoraires()">Enregistrer</button>
         </div>
       </div>
 
@@ -41,7 +41,7 @@
             <option value="J7">7 jours</option>
             <option value="J30">30 jours</option>
           </select>
-          <button type="button" (click)="enregistrerRetention()">Enregistrer</button>
+          <button type="button" class="btn btn--secondary" (click)="enregistrerRetention()">Enregistrer</button>
         </div>
       </div>
     </section>
@@ -78,22 +78,20 @@
 
           <div class="dashboard__actions">
             @if (demande.statut !== 'EN_COURS') {
-                <button type="button" (click)="confirmer(demande.code)">Confirmer</button>
+              <button type="button" class="btn btn--primary" (click)="confirmer(demande.code)">Confirmer</button>
             }
             @if (demande.statut !== 'EN_ATTENTE') {
-                <button type="button" (click)="mettreEnAttente(demande.code)">Mettre en attente</button>
+              <button type="button" class="btn btn--secondary" (click)="mettreEnAttente(demande.code)">Mettre en attente</button>
             }
-            <button type="button" (click)="ouvrirProgrammation(demande.code)">Proposer un horaire</button>
-            <a [routerLink]="['/ecoutant/conversations', demande.code]" class="dashboard__rejoindre">Discuter</a>
-            </div>
-
+            <button type="button" class="btn btn--secondary" (click)="ouvrirProgrammation(demande.code)">Proposer un horaire</button>
+          </div>
 
           @if (codeEnProgrammation() === demande.code) {
             <div class="dashboard__programmation">
               <input type="date" [(ngModel)]="dateProposee" />
               <input type="time" [(ngModel)]="heureProposee" />
-              <button type="button" (click)="validerProgrammation()">Valider</button>
-              <button type="button" (click)="annulerProgrammation()">Annuler</button>
+              <button type="button" class="btn btn--primary" (click)="validerProgrammation()">Valider</button>
+              <button type="button" class="btn btn--secondary" (click)="annulerProgrammation()">Annuler</button>
             </div>
           }
         </div>

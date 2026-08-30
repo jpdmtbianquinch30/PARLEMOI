@@ -13,71 +13,25 @@
   <div class="chat">
     <header class="chat__entete">
       <div class="chat__code">
-        Code : <strong>{{ code() }}</strong>
+        <span class="chat__code-label">Code :</span>
+        <strong class="chat__code-valeur">{{ code() }}</strong>
         <span class="chat__code-note">(a conserver pour retrouver cette conversation pendant 1 mois)</span>
       </div>
 
-      @if (conversation()?.statut === 'EN_ATTENTE') {
-        <div class="chat__attente">En file d'attente - position {{ conversation()?.positionFileAttente }}</div>
-      }
-
-      @if (conversation()?.forfaitActif) {
-        <div class="chat__forfait-actif">
-          Forfait "{{ conversation()?.formuleNom }}" actif jusqu'a {{ conversation()?.forfaitExpireLe | date:'HH:mm' }}
-        </div>
-      } @else {
-        <div class="chat__gratuit">{{ messagesGratuitsRestants() }} message(s) gratuit(s) restant(s)</div>
-      }
-    </header>
-
-    @if (webrtcCall.erreur()) {
-      <div class="chat__banniere chat__banniere--erreur" (click)="webrtcCall.erreur.set(null)">
-        {{ webrtcCall.erreur() }}
-      </div>
-    }
-
-    @switch (webrtcCall.etat()) {
-      @case ('INACTIF') {
-        @if (peutAppeler()) {
-          <div class="appel-bandeau">
-            <button type="button" class="btn-appel" [disabled]="appelEnCoursDeDemarrage()" (click)="demarrerAppel()">
-              📞 {{ appelEnCoursDeDemarrage() ? 'Preparation...' : "Appeler l'ecoutant(e)" }}
-            </button>
-          </div>
+      <div class="chat__statuts">
+        @if (conversation()?.statut === 'EN_ATTENTE') {
+          <span class="chat__badge chat__badge--attente">En file d'attente - position {{ conversation()?.positionFileAttente }}</span>
         }
-      }
-      @case ('SONNERIE_SORTANTE') {
-        <div class="appel-bandeau appel-bandeau--actif">
-          <span>Appel en cours... en attente de reponse</span>
-          <button type="button" class="btn-appel btn-appel--raccrocher" (click)="demanderRaccrochage()">Annuler</button>
-        </div>
-      }
-      @case ('SONNERIE_ENTRANTE') {
-        <div class="appel-bandeau appel-bandeau--entrant">
-          <span>📞 Appel entrant de l'ecoutant(e)</span>
-          <div class="appel-bandeau__actions">
-            <button type="button" class="btn-appel btn-appel--accepter" (click)="accepterAppel()">Accepter</button>
-            <button type="button" class="btn-appel btn-appel--raccrocher" (click)="refuserAppel()">Refuser</button>
-          </div>
-        </div>
-      }
-      @case ('EN_COURS') {
-        <div class="appel-bandeau appel-bandeau--actif">
-          <span>🔊 Appel en cours - {{ formaterDuree(webrtcCall.dureeSecondes()) }}</span>
-          <button type="button" class="btn-appel btn-appel--raccrocher" (click)="demanderRaccrochage()">Raccrocher</button>
-        </div>
-      }
-    }
 
-    @if (confirmationRaccrochage()) {
-      <div class="appel-confirmation">
-        <p>Voulez-vous vraiment mettre fin a l'appel ?</p>
-        <div class="appel-confirmation__actions">
-          <button type="button" (click)="annulerRaccrochage()">Continuer l'appel</button>
-          <button type="button" class="appel-confirmation__confirmer" (click)="confirmerRaccrochage()">Oui, raccrocher</button>
-        </div>
+        @if (conversation()?.forfaitActif) {
+          <span class="chat__badge chat__badge--actif">
+            Forfait "{{ conversation()?.formuleNom }}" actif jusqu'a {{ conversation()?.forfaitExpireLe | date:'HH:mm' }}
+          </span>
+        } @else {
+         <span class="chat__badge chat__badge--gratuit">{{ messagesGratuitsRestants() }} message(s) gratuit(s) restant(s)</span>
+        }
       </div>
-    }
+    </header>
 
     @if (banniere()) {
       <div class="chat__banniere" (click)="fermerBanniere()">{{ banniere() }}</div>
@@ -89,24 +43,7 @@
           class="chat__bulle"
           [class.chat__bulle--utilisateur]="message.auteurType === 'UTILISATEUR'"
           [class.chat__bulle--ecoutant]="message.auteurType === 'ECOUTANT'">
-
-          @if (message.fichierUrlTelechargement) {
-            @if (estImage(message.fichierTypeMime)) {
-              <button type="button" class="chat__fichier-image-bouton" (click)="agrandirImage(message.fichierUrlTelechargement!, message.fichierNomOriginal)">
-                <img [src]="message.fichierUrlTelechargement" [alt]="message.fichierNomOriginal" class="chat__fichier-image" />
-              </button>
-            } @else if (estVideo(message.fichierTypeMime)) {
-              <video [src]="message.fichierUrlTelechargement" controls class="chat__fichier-video"></video>
-            } @else {
-              <a [href]="message.fichierUrlTelechargement" target="_blank" rel="noopener" class="chat__fichier-document">
-                📎 {{ message.fichierNomOriginal }}
-              </a>
-            }
-          }
-
-          @if (message.contenu) {
-            <p>{{ message.contenu }}</p>
-          }
+          <p>{{ message.contenu }}</p>
           <span class="chat__heure">{{ message.envoyeLe | date:'HH:mm' }}</span>
         </div>
       }
@@ -131,43 +68,28 @@
 
         @if (formuleSelectionneeId() && !paiementActif()) {
           <div class="chat__providers">
-            <button type="button" (click)="payerAvec('WAVE')" [disabled]="paiementEnCours()">Payer avec Wave</button>
-            <button type="button" (click)="payerAvec('ORANGE_MONEY')" [disabled]="paiementEnCours()">Payer avec Orange Money</button>
+            <button type="button" class="btn btn--primary" (click)="payerAvec('WAVE')" [disabled]="paiementEnCours()">Payer avec Wave</button>
+            <button type="button" class="btn btn--secondary" (click)="payerAvec('ORANGE_MONEY')" [disabled]="paiementEnCours()">Payer avec Orange Money</button>
           </div>
         }
 
         @if (paiementActif()) {
           <div class="chat__simulation">
             <p>Paiement initie ({{ paiementActif()?.montant }} {{ paiementActif()?.devise }}) - mode simulation actif en developpement.</p>
-            <button type="button" (click)="simulerConfirmationPaiement()">Simuler le paiement reussi</button>
+            <button type="button" class="btn btn--primary" (click)="simulerConfirmationPaiement()">Simuler le paiement reussi</button>
           </div>
         }
       </div>
     } @else {
       <form class="chat__saisie" (ngSubmit)="envoyerMessage()">
-        <label class="chat__joindre">
-          📎
-          <input type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,application/pdf" (change)="surSelectionFichier($event)" hidden [disabled]="fichierEnCours()" />
-        </label>
         <input
           type="text"
           [(ngModel)]="champMessage"
           name="message"
           placeholder="Ecrivez votre message..."
           autocomplete="off" />
-        <button type="submit">Envoyer</button>
+        <button type="submit" class="btn btn--primary">Envoyer</button>
       </form>
-
-      @if (fichierEnCours()) {
-        <p class="chat__fichier-statut">Envoi du fichier en cours...</p>
-      }
-      @if (erreurFichier()) {
-        <p class="chat__fichier-statut chat__fichier-statut--erreur">{{ erreurFichier() }}</p>
-      }
     }
   </div>
-
-  @if (imageAgrandie(); as img) {
-    <app-image-lightbox [url]="img.url" [nom]="img.nom" (fermer)="fermerImageAgrandie()" />
-  }
 }
