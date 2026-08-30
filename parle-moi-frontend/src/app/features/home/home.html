@@ -1,6 +1,6 @@
 <section class="pourquoi">
   <h2>Ici, tu peux être toi-même.</h2>
-  <p class="pourquoi__subtitle">Un espace pensé pour permettre à chacun de parler librement dans un environnement de confiance.</p>
+  <p class="pourquoi__subtitle">Un espace pensé pour permettre à chacun de parler librement, tout de suite, dans un environnement de confiance.</p>
 
   <div class="pourquoi__grid">
     @for (a of atouts; track a.titre) {
@@ -22,7 +22,7 @@
     </div>
 
     <h2>Prends soin de toi</h2>
-    <p>Un moment pour toi, sans jugement. Parle librement avec un écoutant bienveillant.</p>
+    <p>Un chat s'ouvre en un clic, sans compte ni jugement. Les 5 premiers messages sont offerts.</p>
     <a routerLink="/chat" class="btn btn--primary">Parler maintenant</a>
   </div>
 </section>
@@ -36,8 +36,26 @@
   }
 </section>
 
+<section class="etapes">
+  <h2>Comment ça marche</h2>
+  <p class="etapes__subtitle">Quatre étapes, aucune complication.</p>
+
+  <div class="etapes__grid">
+    @for (e of etapes; track e.num) {
+      <div class="etape-card">
+        <span class="etape-card__num">{{ e.num }}</span>
+        <h3>{{ e.titre }}</h3>
+        <p>{{ e.texte }}</p>
+      </div>
+    }
+  </div>
+
+  <a routerLink="/comment-ca-marche" class="etapes__link">En savoir plus →</a>
+</section>
+
 <section class="formules-apercu">
-  <h2>Nos formules</h2>
+  <h2>Si vous voulez continuer</h2>
+  <p class="formules-apercu__subtitle">Après les 5 messages offerts, activez un forfait directement dans le chat.</p>
 
   <div class="formules-apercu__grid">
     @for (f of formulesApercu; track f.nom) {
@@ -70,6 +88,6 @@
 
 <section class="cta-final">
   <h2>Tu as besoin de parler ?</h2>
-  <p>Prends simplement un moment pour toi. Pas de compte. Pas de jugement. Juste un espace pour parler.</p>
+  <p>Aucun compte à créer. Aucun jugement. Juste un espace pour parler, maintenant.</p>
   <a routerLink="/chat" class="btn btn--primary">Parler maintenant</a>
 </section>

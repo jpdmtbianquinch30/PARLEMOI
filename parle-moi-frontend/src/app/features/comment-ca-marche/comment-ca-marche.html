@@ -1,18 +1,38 @@
-<section class="ccm">
-  <div class="ccm__header">
-    <h1>Comment ça marche</h1>
-    <p class="ccm__subtitle">C'est aussi simple que ça.</p>
-  </div>
+<section class="ccm-hero">
+  <span class="ccm-hero__label">Comment ça marche</span>
+  <h1>De la première ligne à l'appel, en quelques secondes.</h1>
+  <p>Aucune inscription. Aucune attente inutile. Un espace pensé pour que parler soit simple.</p>
+</section>
 
-  <div class="ccm__grid">
+<section class="ccm-etapes">
+  <div class="ccm-etapes__grid">
     @for (e of etapes; track e.num) {
-      <div class="ccm__step">
-        <span class="ccm__number">{{ e.num }}</span>
-        <h3>{{ e.titre }}</h3>
+      <div class="ccm-etape">
+        <div class="ccm-etape__visuel">
+          <img [src]="e.icone" [alt]="e.titre" />
+          <span class="ccm-etape__num">{{ e.num }}</span>
+        </div>
+        <h2>{{ e.titre }}</h2>
         <p>{{ e.texte }}</p>
       </div>
     }
   </div>
+</section>
 
-  <a routerLink="/reservation" class="btn btn--primary ccm__cta">Prendre rendez-vous</a>
+<section class="ccm-precisions">
+  <h2>Quelques précisions</h2>
+
+  <div class="ccm-precisions__grid">
+    @for (p of precisions; track p.titre) {
+      <div class="ccm-precision">
+        <h3>{{ p.titre }}</h3>
+        <p>{{ p.texte }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="ccm-cta">
+  <h2>Prêt(e) à parler ?</h2>
+  <a routerLink="/chat" class="btn btn--primary">Parler maintenant</a>
 </section>

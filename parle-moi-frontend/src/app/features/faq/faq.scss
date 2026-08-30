@@ -1,42 +1,104 @@
-.faq {
-  max-width: 680px;
+section {
+  max-width: 760px;
   margin: 0 auto;
-  padding: var(--space-2xl) var(--space-md);
+  padding-inline: var(--space-md);
+  overflow-wrap: break-word;
+}
+
+.faq-hero {
+  text-align: center;
+  padding-block: var(--space-2xl) var(--space-xl);
 
   h1 {
-    font-size: clamp(1.8rem, 4vw, 2.4rem);
-    text-align: center;
-    margin-bottom: var(--space-xl);
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    font-weight: 500;
+    color: var(--color-encre);
+    margin-bottom: var(--space-xs);
   }
 
-  &__item {
-    border-bottom: 1px solid rgba(35, 35, 56, 0.08);
-    padding: var(--space-md) 0;
+  p {
+    color: var(--color-encre-muted);
+    font-size: 1.02rem;
+  }
+}
+
+.faq-liste {
+  padding-bottom: var(--space-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.faq-item {
+  background: white;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 20px rgba(26, 27, 46, 0.05);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+
+  &--ouvert {
+    box-shadow: 0 8px 28px rgba(26, 27, 46, 0.09);
   }
 
   &__question {
     width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
     background: none;
     text-align: left;
+    font-family: var(--font-body);
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.98rem;
+    color: var(--color-encre);
   }
 
-  &__arrow {
-    transition: transform 0.2s ease;
+  &__icone {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--color-voile);
     color: var(--color-corail);
-
-    &--open {
-      transform: rotate(180deg);
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 700;
   }
 
   &__reponse {
+    padding: 0 var(--space-lg) var(--space-md);
     color: var(--color-encre-muted);
-    margin-top: var(--space-sm);
+    font-size: 0.92rem;
     line-height: 1.6;
+  }
+}
+
+.faq-cta {
+  text-align: center;
+  padding-block: var(--space-lg) var(--space-2xl);
+
+  p {
+    color: var(--color-encre-muted);
+    margin-bottom: var(--space-md);
+  }
+}
+
+.btn--primary {
+  display: inline-block;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  background: var(--color-corail);
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    background: var(--color-corail-hover);
+    transform: translateY(-2px);
   }
 }

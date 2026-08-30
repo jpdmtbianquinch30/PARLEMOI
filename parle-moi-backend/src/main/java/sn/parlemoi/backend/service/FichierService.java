@@ -2,6 +2,7 @@ package sn.parlemoi.backend.service;
 
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -84,6 +85,24 @@ public class FichierService {
             );
         } catch (Exception e) {
             throw new IllegalStateException("Impossible de generer l'URL de telechargement", e);
+        }
+    }
+
+    // Utilisee uniquement par le job de purge - jamais expose via un endpoint REST,
+    // aucun utilisateur ne doit pouvoir declencher une suppression de fichier a la demande.
+    public void supprimerObjet(String cleObjet) {
+        try {
+            minioClient.removeObject(
+                    io.minio.RemoveObjectArgs.builder()
+                            .bucket(bucket)
+                            .object(cleObjet)
+                            .build()
+            );
+        } catch (Exception e) {
+            // On ne bloque jamais la purge de la ligne DB pour un fichier deja absent du bucket
+            // (ex: purge relancee apres un echec partiel precedent) - on logue et on continue.
+            org.slf4j.LoggerFactory.getLogger(FichierService.class)
+                    .warn("Impossible de supprimer l'objet MinIO {} pendant la purge", cleObjet, e);
         }
     }
 

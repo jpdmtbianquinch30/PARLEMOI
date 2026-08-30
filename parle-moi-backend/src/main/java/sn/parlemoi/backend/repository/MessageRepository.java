@@ -14,4 +14,7 @@ public interface MessageRepository extends JpaRepository<Message, String> {
     List<Message> findByConversationIdAndExpireLeAfterOrderByEnvoyeLeAsc(
             String conversationId, LocalDateTime maintenant
     );
+    List<Message> findByExpireLeBefore(LocalDateTime maintenant);
+
+    List<Message> findByConversationId(String conversationId);
 }

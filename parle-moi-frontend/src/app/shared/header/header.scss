@@ -11,10 +11,19 @@
 
   &__logo {
     font-family: var(--font-display);
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--color-encre);
     z-index: 210;
+    flex-shrink: 0;
+  }
+
+  // Icones caches par defaut sur desktop (texte seul, comme avant) -
+  // reapparaissent uniquement dans le menu mobile deploie
+  &__icone {
+    display: none;
+    font-size: 1.1rem;
+    line-height: 1;
   }
 
   &__nav {
@@ -31,7 +40,7 @@
       flex-direction: column;
       align-items: stretch;
       position: fixed;
-      top: 64px;
+      top: 60px;
       left: 0;
       right: 0;
       bottom: 0;
@@ -41,6 +50,21 @@
       z-index: 199;
       overflow-y: auto;
 
+      // Version mobile deployee : icone + texte cote a cote, plus lisible
+      // et plus agreable a parcourir au doigt qu'une simple liste de texte
+      .header__icone {
+        display: inline-block;
+      }
+
+      > a, .header__dropdown-trigger {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.85rem 0.3rem;
+        font-size: 1rem;
+        border-bottom: 1px solid rgba(35, 35, 56, 0.06);
+      }
+
       @media (min-width: 768px) {
         position: static;
         flex-direction: row;
@@ -48,14 +72,15 @@
         padding: 0;
         background: transparent;
         overflow: visible;
-      }
-    }
 
-    > a {
-      padding: var(--space-sm) 0;
+        .header__icone {
+          display: none;
+        }
 
-      @media (min-width: 768px) {
-        padding: 0;
+        > a, .header__dropdown-trigger {
+          padding: 0;
+          border-bottom: none;
+        }
       }
     }
   }
@@ -63,8 +88,6 @@
   &__dropdown {
     position: relative;
 
-    // Desktop uniquement : le survol (ou le focus clavier) revele le sous-menu.
-    // C'est ce qui remplace le clic obligatoire d'avant.
     @media (min-width: 768px) {
       &:hover .header__submenu,
       &:focus-within .header__submenu {
@@ -83,18 +106,18 @@
     background: none;
     font-size: 0.95rem;
     color: var(--color-encre);
-    padding: var(--space-sm) 0;
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
 
     @media (min-width: 768px) {
       width: auto;
-      padding: 0;
+      justify-content: center;
     }
   }
 
   &__arrow {
     display: inline-block;
+    margin-left: auto;
     transition: transform 0.2s ease;
 
     &--open {
@@ -102,6 +125,7 @@
     }
 
     @media (min-width: 768px) {
+      margin-left: 4px;
       .header__dropdown:hover &,
       .header__dropdown:focus-within & {
         transform: rotate(180deg);
@@ -110,7 +134,6 @@
   }
 
   &__submenu {
-    // Mobile : masque par defaut, revele par la classe --open (clic, pas de survol tactile)
     display: none;
     background: var(--color-voile);
     border-radius: var(--radius-sm);
@@ -124,7 +147,6 @@
     }
 
     @media (min-width: 768px) {
-      // Desktop : toujours dans le DOM, mais invisible tant qu'on ne survole pas le parent
       display: flex;
       flex-direction: column;
       position: absolute;
@@ -134,6 +156,7 @@
       box-shadow: 0 16px 40px rgba(26, 27, 46, 0.14);
       border-radius: var(--radius-md);
       min-width: 320px;
+      max-width: min(90vw, 380px);
       padding: var(--space-sm);
       z-index: 210;
 
@@ -142,19 +165,6 @@
       transform: translateY(8px);
       pointer-events: none;
       transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-
-      // Comble le petit vide entre le bouton et le sous-menu : sans ca,
-      // le survol se coupe une fraction de seconde en descendant et le
-      // menu se referme avant d'atteindre les liens.
-      &::before {
-        content: '';
-        position: absolute;
-        top: calc(-1 * var(--space-xs));
-        left: 0;
-        right: 0;
-        height: var(--space-xs);
-        pointer-events: auto;
-      }
 
       &--mega {
         min-width: 380px;
@@ -245,10 +255,38 @@
     font-size: 0.9rem;
     transition: background 0.2s ease;
     z-index: 210;
+    flex-shrink: 0;
+    text-decoration: none;
 
     &:hover {
       background: var(--color-corail-hover);
     }
+
+    &--mobile {
+      display: none;
+    }
+
+    &--desktop {
+      display: none;
+
+      @media (min-width: 768px) {
+        display: inline-block;
+      }
+    }
+  }
+
+  // Le CTA principal remonte dans la liste du menu mobile (icone + texte,
+  // meme traitement que les autres liens), pas de doublon visuel
+  &__nav--open &__cta--mobile {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    justify-content: center;
+    margin-top: var(--space-sm);
+    padding: 0.85rem !important;
+    border-bottom: none !important;
+
+    .header__icone { display: inline-block; }
   }
 
   &__burger {
@@ -257,6 +295,8 @@
     gap: 4px;
     background: none;
     z-index: 210;
+    padding: 0.4rem;
+    flex-shrink: 0;
 
     @media (min-width: 768px) {
       display: none;
@@ -266,8 +306,13 @@
       width: 22px;
       height: 2px;
       background: var(--color-encre);
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    &--ouvert {
+      span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+      span:nth-child(2) { opacity: 0; }
+      span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
     }
   }
-  
 }

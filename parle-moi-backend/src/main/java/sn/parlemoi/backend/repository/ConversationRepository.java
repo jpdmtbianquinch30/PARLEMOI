@@ -19,6 +19,8 @@ public interface ConversationRepository extends JpaRepository<Conversation, Stri
 
     List<Conversation> findAllByOrderByCreeLeDesc();
 
+    List<Conversation> findByExpireLeBeforeAndStatutNot(LocalDateTime maintenant, StatutConversation statut);
+
     long countByStatut(StatutConversation statut);
 
     long countByCreeLeAfter(LocalDateTime depuis);

@@ -1,24 +1,31 @@
 // ==========================================================================
-// Section "Pourquoi"
+// Base commune - empeche tout debordement horizontal sur mobile
 // ==========================================================================
-.pourquoi {
+section {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 5rem var(--space-md);
+  padding-inline: var(--space-md);
+  overflow-wrap: break-word;
+}
+
+// ==========================================================================
+// Pourquoi
+// ==========================================================================
+.pourquoi {
+  padding-block: var(--space-2xl) var(--space-xl);
   text-align: center;
-  position: relative;
 
   h2 {
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
     font-weight: 500;
     color: var(--color-encre);
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-sm);
   }
 
   &__subtitle {
     color: var(--color-encre-muted);
     max-width: 520px;
-    margin: 0 auto 3rem;
+    margin: 0 auto var(--space-xl);
     font-size: 1.05rem;
     line-height: 1.6;
   }
@@ -26,14 +33,14 @@
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2rem;
+    gap: var(--space-lg);
   }
 }
 
 .atout-card {
   background: white;
   border-radius: var(--radius-md);
-  padding: 2rem 1.5rem;
+  padding: var(--space-lg) var(--space-md);
   box-shadow: 0 10px 40px rgba(26, 27, 46, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   border: 2px solid transparent;
@@ -48,19 +55,19 @@
     width: 44px;
     height: 44px;
     object-fit: contain;
-    margin-bottom: 1.2rem;
+    margin-bottom: var(--space-md);
   }
 
   h3 {
     color: var(--color-teal);
-    font-size: 1.2rem;
-    margin-bottom: 0.6rem;
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
     font-weight: 600;
   }
 
   p {
     color: var(--color-encre-muted);
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     line-height: 1.5;
   }
 }
@@ -70,36 +77,33 @@
 // ==========================================================================
 .hero {
   position: relative;
-  min-height: 500px;
+  min-height: 480px;
   display: flex;
   align-items: center;
-  padding: 4rem var(--space-md);
-  margin: 0 var(--space-md) 3rem;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  padding: var(--space-xl) var(--space-md);
+  margin-bottom: var(--space-xl);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background-image: linear-gradient(90deg, rgba(26, 27, 46, 0.85) 0%, rgba(26, 27, 46, 0.5) 55%, rgba(26, 27, 46, 0.15) 100%), url('/home.png');
+  background-image: linear-gradient(90deg, rgba(26, 27, 46, 0.88) 0%, rgba(26, 27, 46, 0.55) 55%, rgba(26, 27, 46, 0.2) 100%), url('/home.png');
   background-size: cover;
   background-position: center 30%;
 }
 
 .hero__badges {
   display: flex;
-  gap: 0.6rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-sm);
 }
 
 .hero__badge {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-nuit);
   background: var(--color-or);
-  padding: 0.35rem 0.8rem;
+  padding: 0.3rem 0.75rem;
   border-radius: 999px;
 }
 
@@ -110,52 +114,48 @@
   color: white;
 
   h2 {
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(1.9rem, 4.5vw, 2.9rem);
     color: white;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-sm);
     font-weight: 500;
     line-height: 1.15;
   }
 
   p {
-    font-size: 1.05rem;
+    font-size: 1.02rem;
     color: rgba(255, 255, 255, 0.88);
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-lg);
     line-height: 1.6;
-  }
-
-  .btn {
-    width: auto;
   }
 }
 
 // ==========================================================================
-// Barre de statistiques
+// Stats
 // ==========================================================================
 .stats {
   display: flex;
   justify-content: center;
-  gap: clamp(2rem, 8vw, 6rem);
+  gap: clamp(1.5rem, 6vw, 5rem);
   flex-wrap: wrap;
-  padding: 3rem var(--space-md);
+  padding-block: var(--space-xl);
   text-align: center;
 }
 
 .stats__item {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.25rem;
 }
 
 .stats__valeur {
   font-family: var(--font-display);
-  font-size: 2.25rem;
+  font-size: clamp(1.7rem, 4vw, 2.25rem);
   font-weight: 500;
   color: var(--color-corail);
 }
 
 .stats__label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-encre-muted);
@@ -163,39 +163,112 @@
 }
 
 // ==========================================================================
-// Formules (aperçu)
+// Etapes (Comment ca marche - apercu)
 // ==========================================================================
-.formules-apercu {
-  padding: 4rem var(--space-md) 5rem;
+.etapes {
+  padding-block: var(--space-xl) var(--space-2xl);
   text-align: center;
 
   h2 {
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
     font-weight: 500;
     color: var(--color-encre);
-    margin-bottom: 3rem;
+    margin-bottom: var(--space-xs);
+  }
+
+  &__subtitle {
+    color: var(--color-encre-muted);
+    margin-bottom: var(--space-xl);
   }
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 2rem;
-    max-width: 1000px;
-    margin: 0 auto 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
   }
 
   &__link {
     color: var(--color-teal);
     font-weight: 600;
-    font-size: 1.05rem;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      color: var(--color-corail);
+      transform: translateX(4px);
+    }
+  }
+}
+
+.etape-card {
+  text-align: left;
+  padding: var(--space-md);
+
+  &__num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--color-corail);
+    margin-bottom: var(--space-xs);
+  }
+
+  h3 {
+    font-size: 1.05rem;
+    color: var(--color-encre);
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+  }
+
+  p {
+    color: var(--color-encre-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
+
+// ==========================================================================
+// Formules apercu
+// ==========================================================================
+.formules-apercu {
+  padding-block: var(--space-xl) var(--space-2xl);
+  text-align: center;
+
+  h2 {
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
+    font-weight: 500;
+    color: var(--color-encre);
+    margin-bottom: var(--space-xs);
+  }
+
+  &__subtitle {
+    color: var(--color-encre-muted);
+    max-width: 480px;
+    margin: 0 auto var(--space-xl);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-lg);
+    max-width: 900px;
+    margin: 0 auto var(--space-lg);
+  }
+
+  &__link {
+    color: var(--color-teal);
+    font-weight: 600;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     transition: transform 0.2s ease, color 0.2s ease;
 
     &:hover {
       color: var(--color-corail);
-      transform: translateX(6px);
+      transform: translateX(4px);
     }
   }
 }
@@ -204,7 +277,7 @@
   position: relative;
   background: white;
   border-radius: var(--radius-md);
-  padding: 2rem 1.5rem;
+  padding: var(--space-lg) var(--space-md);
   box-shadow: 0 10px 40px rgba(26, 27, 46, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 2px solid transparent;
@@ -212,8 +285,8 @@
   flex-direction: column;
 
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 50px rgba(26, 27, 46, 0.14);
+    transform: translateY(-6px);
+    box-shadow: 0 18px 44px rgba(26, 27, 46, 0.13);
   }
 
   &--highlight {
@@ -228,9 +301,9 @@
     transform: translateX(-50%);
     background: var(--color-corail);
     color: white;
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    padding: 5px 14px;
+    padding: 4px 12px;
     border-radius: 999px;
     white-space: nowrap;
     text-transform: uppercase;
@@ -238,8 +311,8 @@
   }
 
   h3 {
-    margin-top: 0.5rem;
-    font-size: 1.15rem;
+    margin-top: 0.4rem;
+    font-size: 1.1rem;
     color: var(--color-encre);
     font-weight: 600;
   }
@@ -247,65 +320,64 @@
   &__prix {
     color: var(--color-teal);
     font-weight: 700;
-    font-size: 1.4rem;
-    margin: 0.8rem 0 0.3rem;
+    font-size: 1.3rem;
+    margin: 0.7rem 0 0.2rem;
   }
 
   &__duree {
     color: var(--color-encre-muted);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.03em;
   }
 }
 
 // ==========================================================================
-// Témoignages
+// Temoignages
 // ==========================================================================
 .temoignages {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 4rem var(--space-md) 5rem;
+  padding-block: var(--space-xl) var(--space-2xl);
   text-align: center;
 
   h2 {
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
     font-weight: 500;
     color: var(--color-encre);
-    margin-bottom: 3rem;
+    margin-bottom: var(--space-xl);
   }
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
   }
 
   blockquote {
     background: white;
     border-radius: var(--radius-md);
-    padding: 2rem;
+    padding: var(--space-lg);
     box-shadow: 0 10px 40px rgba(26, 27, 46, 0.08);
     text-align: left;
     border-left: 3px solid var(--color-teal);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 0;
 
     &:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 18px 44px rgba(26, 27, 46, 0.12);
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(26, 27, 46, 0.12);
     }
 
     p {
       font-style: italic;
       color: var(--color-encre);
-      margin-bottom: 1rem;
+      margin-bottom: var(--space-sm);
       line-height: 1.6;
-      font-size: 0.98rem;
+      font-size: 0.96rem;
     }
 
     cite {
       color: var(--color-encre-muted);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-style: normal;
       font-weight: 600;
     }
@@ -313,13 +385,14 @@
 }
 
 // ==========================================================================
-// CTA final — plus de dependance a une image externe fragile
+// CTA final
 // ==========================================================================
 .cta-final {
+  max-width: none;
   background: var(--color-nuit);
   color: white;
   text-align: center;
-  padding: 5rem var(--space-md);
+  padding: var(--space-2xl) var(--space-md);
   position: relative;
   overflow: hidden;
 
@@ -331,15 +404,16 @@
     transform: translateX(-50%);
     width: 700px;
     height: 700px;
+    max-width: 140vw;
     background: radial-gradient(circle, rgba(198, 102, 122, 0.18) 0%, transparent 70%);
     animation: pulse 8s ease-in-out infinite;
   }
 
   h2 {
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
     color: white;
     font-weight: 500;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-sm);
     position: relative;
     z-index: 1;
   }
@@ -347,8 +421,8 @@
   p {
     color: rgba(255, 255, 255, 0.8);
     max-width: 480px;
-    margin: 0 auto 2.5rem;
-    font-size: 1.05rem;
+    margin: 0 auto var(--space-lg);
+    font-size: 1.02rem;
     line-height: 1.6;
     position: relative;
     z-index: 1;
@@ -357,7 +431,6 @@
   .btn {
     position: relative;
     z-index: 1;
-    width: auto;
   }
 }
 
@@ -366,17 +439,35 @@
   50% { transform: translateX(-50%) scale(1.15); opacity: 1; }
 }
 
-@media (max-width: 640px) {
-  .pourquoi, .formules-apercu, .temoignages, .cta-final {
-    padding: 3rem var(--space-md);
-  }
+// ==========================================================================
+// Bouton partage - coherent avec le reste du site (chat, dashboard)
+// ==========================================================================
+.btn {
+  display: inline-block;
+  padding: 0.85rem 1.8rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.98rem;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
 
+  &--primary {
+    background: var(--color-corail);
+    color: white;
+
+    &:hover {
+      background: var(--color-corail-hover);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+@media (max-width: 640px) {
   .hero {
     min-height: 420px;
-    margin: 0 var(--space-sm) 2rem;
   }
 
-  .atout-card, .formule-mini, blockquote {
-    padding: 1.5rem 1rem;
+  .atout-card, .formule-mini, blockquote, .etape-card {
+    padding: var(--space-md);
   }
 }

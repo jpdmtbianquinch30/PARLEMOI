@@ -13,15 +13,22 @@ export class Home {
 
   stats = [
     { valeur: '100%', label: 'Anonyme' },
-    { valeur: '3', label: 'Formules flexibles' },
+    { valeur: '5', label: 'Messages offerts' },
     { valeur: '0', label: 'Jugement' }
   ];
 
   atouts = [
-    { titre: 'Écoute', texte: 'Une écoute attentive, sans interruption et sans jugement.', icone: 'ecoute.png' },
+    { titre: 'Écoute immédiate', texte: 'Un chat démarre en un clic, sans compte ni formulaire.', icone: 'ecoute.png' },
     { titre: 'Bienveillance', texte: 'Un échange humain dans un environnement respectueux.', icone: 'hands.png' },
-    { titre: 'Confidentialité', texte: 'Une réservation conçue pour préserver votre vie privée.', icone: 'lock.png' },
+    { titre: 'Confidentialité', texte: 'Aucune donnée personnelle demandée, jamais.', icone: 'lock.png' },
     { titre: 'Sans jugement', texte: 'Vous pouvez parler librement de ce que vous ressentez.', icone: 'heart.png' }
+  ];
+
+  etapes = [
+    { num: '01', titre: 'Vous parlez', texte: 'Un chat démarre instantanément, un code unique vous est donné.' },
+    { num: '02', titre: '5 messages offerts', texte: "Le temps de voir si l'échange vous convient." },
+    { num: '03', titre: 'Un forfait, si besoin', texte: 'Pour continuer par écrit ou passer à l\'appel vocal.' },
+    { num: '04', titre: 'Votre code, 1 mois', texte: 'Retrouvez votre conversation à tout moment, sans rien créer.' }
   ];
 
   formulesApercu = [
@@ -32,6 +39,6 @@ export class Home {
 
   temoignages = signal([
     { texte: "Je me suis sentie écoutée sans être jugée.", signature: 'Cliente anonyme' },
-    { texte: "J'avais simplement besoin de parler à quelqu'un.", signature: 'Client anonyme' }
+    { texte: "J'avais simplement besoin de parler à quelqu'un, tout de suite.", signature: 'Client anonyme' }
   ]);
 }
