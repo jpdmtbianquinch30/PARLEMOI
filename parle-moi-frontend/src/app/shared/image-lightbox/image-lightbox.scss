@@ -1,0 +1,46 @@
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 27, 46, 0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 2rem;
+  cursor: zoom-out;
+
+  &__fermer {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  }
+
+  &__image {
+    max-width: min(90vw, 900px);
+    max-height: 80vh;
+    border-radius: var(--radius-sm);
+    cursor: default;
+  }
+
+  &__ouvrir {
+    margin-top: 1rem;
+    color: white;
+    text-decoration: underline;
+    font-size: 0.9rem;
+  }
+}

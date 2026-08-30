@@ -140,4 +140,37 @@ export class EcoutantChat implements OnInit, OnDestroy {
     const s = (secondes % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   }
+
+    fichierEnCours = signal(false);
+  erreurFichier = signal<string | null>(null);
+
+  surSelectionFichier(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const fichier = input.files?.[0];
+    if (!fichier) return;
+
+    this.erreurFichier.set(null);
+    this.fichierEnCours.set(true);
+
+    this.conversationService.uploaderFichier(this.code(), fichier).subscribe({
+      next: (resultat) => {
+        this.fichierEnCours.set(false);
+        this.chatSocket.envoyer(this.code(), '', resultat.id);
+        input.value = '';
+      },
+      error: (err) => {
+        this.fichierEnCours.set(false);
+        this.erreurFichier.set(err.error?.message || "Ce fichier n'a pas pu etre envoye.");
+        input.value = '';
+      }
+    });
+  }
+
+  estImage(typeMime: string | null): boolean {
+    return !!typeMime && typeMime.startsWith('image/');
+  }
+
+  estVideo(typeMime: string | null): boolean {
+    return !!typeMime && typeMime.startsWith('video/');
+  }
 }

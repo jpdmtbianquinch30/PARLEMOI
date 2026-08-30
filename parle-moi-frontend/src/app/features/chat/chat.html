@@ -26,11 +26,11 @@
           Forfait "{{ conversation()?.formuleNom }}" actif jusqu'a {{ conversation()?.forfaitExpireLe | date:'HH:mm' }}
         </div>
       } @else {
-       <div class="chat__gratuit">{{ messagesGratuitsRestants() }} message(s) gratuit(s) restant(s)</div>
-    }
+        <div class="chat__gratuit">{{ messagesGratuitsRestants() }} message(s) gratuit(s) restant(s)</div>
+      }
     </header>
 
-        @if (webrtcCall.erreur()) {
+    @if (webrtcCall.erreur()) {
       <div class="chat__banniere chat__banniere--erreur" (click)="webrtcCall.erreur.set(null)">
         {{ webrtcCall.erreur() }}
       </div>
@@ -89,7 +89,24 @@
           class="chat__bulle"
           [class.chat__bulle--utilisateur]="message.auteurType === 'UTILISATEUR'"
           [class.chat__bulle--ecoutant]="message.auteurType === 'ECOUTANT'">
-          <p>{{ message.contenu }}</p>
+
+          @if (message.fichierUrlTelechargement) {
+            @if (estImage(message.fichierTypeMime)) {
+              <button type="button" class="chat__fichier-image-bouton" (click)="agrandirImage(message.fichierUrlTelechargement!, message.fichierNomOriginal)">
+                <img [src]="message.fichierUrlTelechargement" [alt]="message.fichierNomOriginal" class="chat__fichier-image" />
+              </button>
+            } @else if (estVideo(message.fichierTypeMime)) {
+              <video [src]="message.fichierUrlTelechargement" controls class="chat__fichier-video"></video>
+            } @else {
+              <a [href]="message.fichierUrlTelechargement" target="_blank" rel="noopener" class="chat__fichier-document">
+                📎 {{ message.fichierNomOriginal }}
+              </a>
+            }
+          }
+
+          @if (message.contenu) {
+            <p>{{ message.contenu }}</p>
+          }
           <span class="chat__heure">{{ message.envoyeLe | date:'HH:mm' }}</span>
         </div>
       }
@@ -128,6 +145,10 @@
       </div>
     } @else {
       <form class="chat__saisie" (ngSubmit)="envoyerMessage()">
+        <label class="chat__joindre">
+          📎
+          <input type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,application/pdf" (change)="surSelectionFichier($event)" hidden [disabled]="fichierEnCours()" />
+        </label>
         <input
           type="text"
           [(ngModel)]="champMessage"
@@ -136,6 +157,17 @@
           autocomplete="off" />
         <button type="submit">Envoyer</button>
       </form>
+
+      @if (fichierEnCours()) {
+        <p class="chat__fichier-statut">Envoi du fichier en cours...</p>
+      }
+      @if (erreurFichier()) {
+        <p class="chat__fichier-statut chat__fichier-statut--erreur">{{ erreurFichier() }}</p>
+      }
     }
   </div>
+
+  @if (imageAgrandie(); as img) {
+    <app-image-lightbox [url]="img.url" [nom]="img.nom" (fermer)="fermerImageAgrandie()" />
+  }
 }

@@ -69,15 +69,43 @@
     <div class="ecoutant-chat__messages">
       @for (message of messages(); track message.id) {
         <div class="ecoutant-chat__bulle" [class.ecoutant-chat__bulle--moi]="message.auteurType === 'ECOUTANT'">
-          <p>{{ message.contenu }}</p>
+
+          @if (message.fichierUrlTelechargement) {
+            @if (estImage(message.fichierTypeMime)) {
+              <a [href]="message.fichierUrlTelechargement" target="_blank" rel="noopener">
+                <img [src]="message.fichierUrlTelechargement" [alt]="message.fichierNomOriginal" class="ecoutant-chat__fichier-image" />
+              </a>
+            } @else if (estVideo(message.fichierTypeMime)) {
+              <video [src]="message.fichierUrlTelechargement" controls class="ecoutant-chat__fichier-video"></video>
+            } @else {
+              <a [href]="message.fichierUrlTelechargement" target="_blank" rel="noopener" class="ecoutant-chat__fichier-document">
+                📎 {{ message.fichierNomOriginal }}
+              </a>
+            }
+          }
+
+          @if (message.contenu) {
+            <p>{{ message.contenu }}</p>
+          }
           <span>{{ message.envoyeLe | date:'HH:mm' }}</span>
         </div>
       }
     </div>
 
     <form class="ecoutant-chat__saisie" (ngSubmit)="envoyerMessage()">
+      <label class="ecoutant-chat__joindre">
+        📎
+        <input type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,application/pdf" (change)="surSelectionFichier($event)" hidden [disabled]="fichierEnCours()" />
+      </label>
       <input type="text" [(ngModel)]="champMessage" name="message" placeholder="Ecrivez votre reponse..." autocomplete="off" />
       <button type="submit">Envoyer</button>
     </form>
+
+    @if (fichierEnCours()) {
+      <p class="ecoutant-chat__fichier-statut">Envoi du fichier en cours...</p>
+    }
+    @if (erreurFichier()) {
+      <p class="ecoutant-chat__fichier-statut ecoutant-chat__fichier-statut--erreur">{{ erreurFichier() }}</p>
+    }
   </div>
 }

@@ -1,0 +1,11 @@
+<div class="lightbox" (click)="fermer.emit()">
+  <button type="button" class="lightbox__fermer" (click)="fermer.emit()" aria-label="Fermer">✕</button>
+
+  <img [src]="url" [alt]="nom || 'Image agrandie'" class="lightbox__image" (click)="$event.stopPropagation()" />
+
+  @if (nom) {
+    <a [href]="url" target="_blank" rel="noopener" class="lightbox__ouvrir" (click)="$event.stopPropagation()">
+      Ouvrir dans un nouvel onglet
+    </a>
+  }
+</div>

@@ -131,3 +131,44 @@
 
   &__confirmer { color: var(--color-corail); }
 }
+.ecoutant-chat__fichier-image {
+  max-width: 220px;
+  border-radius: var(--radius-sm);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.ecoutant-chat__fichier-video {
+  max-width: 260px;
+  border-radius: var(--radius-sm);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.ecoutant-chat__fichier-document {
+  display: inline-block;
+  padding: 0.5rem 0.8rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.4rem;
+  color: inherit;
+  text-decoration: underline;
+}
+
+.ecoutant-chat__joindre {
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.ecoutant-chat__fichier-statut {
+  font-size: 0.8rem;
+  padding: 0.3rem 1rem;
+  color: var(--color-encre-muted);
+
+  &--erreur {
+    color: var(--color-corail);
+  }
+}

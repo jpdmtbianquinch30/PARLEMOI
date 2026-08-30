@@ -43,7 +43,8 @@ public class ConversationService {
             UtilisateurRepository utilisateurRepository,
             CodeGeneratorService codeGeneratorService,
             MessageRepository messageRepository,
-            TurnCredentialsService turnCredentialsService
+            TurnCredentialsService turnCredentialsService,
+            MessageService messageService
     ) {
         this.conversationRepository = conversationRepository;
         this.ecoutantRepository = ecoutantRepository;
@@ -51,6 +52,7 @@ public class ConversationService {
         this.codeGeneratorService = codeGeneratorService;
         this.messageRepository = messageRepository;
         this.turnCredentialsService = turnCredentialsService;
+        this.messageService = messageService;
     }
 
 

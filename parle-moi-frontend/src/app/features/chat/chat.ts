@@ -6,13 +6,14 @@ import { ConversationService, ConversationApi, MessageApi, PaiementApi } from '.
 import { ChatSocketService, EvenementChat, EvenementAppel } from '../../core/chat-socket';
 import { CatalogueService, FormuleApi } from '../../core/catalogue';
 import { WebrtcCallService } from '../../core/webrtc-call';
+import { ImageLightbox } from '../../shared/image-lightbox/image-lightbox';
 
 type EtatChat = 'chargement' | 'pret' | 'paywall' | 'erreur';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ImageLightbox],
   templateUrl: './chat.html',
   styleUrl: './chat.scss'
 })
@@ -212,4 +213,48 @@ export class Chat implements OnInit, OnDestroy {
     const s = (secondes % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   }
+
+  fichierEnCours = signal(false);
+  erreurFichier = signal<string | null>(null);
+
+  surSelectionFichier(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const fichier = input.files?.[0];
+    if (!fichier) return;
+
+    this.erreurFichier.set(null);
+    this.fichierEnCours.set(true);
+
+    this.conversationService.uploaderFichier(this.code(), fichier).subscribe({
+      next: (resultat) => {
+        this.fichierEnCours.set(false);
+        this.chatSocket.envoyer(this.code(), '', resultat.id);
+        input.value = '';
+      },
+      error: (err) => {
+        this.fichierEnCours.set(false);
+        this.erreurFichier.set(err.error?.message || "Ce fichier n'a pas pu etre envoye.");
+        input.value = '';
+      }
+    });
+  }
+
+  imageAgrandie = signal<{ url: string; nom: string | null } | null>(null);
+
+  agrandirImage(url: string, nom: string | null): void {
+    this.imageAgrandie.set({ url, nom });
+  }
+
+  fermerImageAgrandie(): void {
+    this.imageAgrandie.set(null);
+  }
+
+  estImage(typeMime: string | null): boolean {
+    return !!typeMime && typeMime.startsWith('image/');
+  }
+
+  estVideo(typeMime: string | null): boolean {
+    return !!typeMime && typeMime.startsWith('video/');
+  }
+
 }

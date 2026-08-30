@@ -78,13 +78,13 @@ export class ChatSocketService {
     this.client.activate();
   }
 
-  envoyer(code: string, contenu: string): void {
+    envoyer(code: string, contenu: string, fichierId?: string | null): void {
     if (!this.client || !this.client.connected) {
       return;
     }
     this.client.publish({
       destination: `/app/conversations/${code}/envoyer`,
-      body: JSON.stringify({ contenu })
+      body: JSON.stringify({ contenu, fichierId: fichierId ?? null })
     });
   }
 

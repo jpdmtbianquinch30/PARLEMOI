@@ -6,6 +6,17 @@ import { environment } from '../../environments/environment';
 export type DureeRetention = 'H24' | 'J7' | 'J30';
 export type StatutConversation = 'EN_ATTENTE' | 'PROGRAMMEE' | 'EN_COURS' | 'TERMINEE' | 'ANNULEE' | 'EXPIREE';
 
+export interface MessageApi {
+  id: string;
+  auteurType: 'UTILISATEUR' | 'ECOUTANT';
+  contenu: string;
+  envoyeLe: string;
+  fichierId: string | null;
+  fichierNomOriginal: string | null;
+  fichierTypeMime: string | null;
+  fichierUrlTelechargement: string | null;
+}
+
 export interface ConversationApi {
   code: string;
   statut: StatutConversation;
@@ -46,6 +57,13 @@ export interface PaiementApi {
   devise: string;
 }
 
+export interface FichierUploadApi {
+  id: string;
+  nomOriginal: string;
+  typeMime: string;
+  tailleOctets: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ConversationService {
   private http = inject(HttpClient);
@@ -73,5 +91,10 @@ export class ConversationService {
 
     turnCredentials(code: string): Observable<TurnCredentialsApi> {
     return this.http.get<TurnCredentialsApi>(`${this.baseUrl}/${code}/turn-credentials`);
+  }
+    uploaderFichier(code: string, fichier: File): Observable<FichierUploadApi> {
+    const formData = new FormData();
+    formData.append('fichier', fichier);
+    return this.http.post<FichierUploadApi>(`${this.baseUrl}/${code}/fichiers`, formData);
   }
 }
